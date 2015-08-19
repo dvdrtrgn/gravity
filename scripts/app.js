@@ -1,18 +1,14 @@
-/* global MOON_MASS, CIRCLE_ID, STEP_INTERVAL, EARTH_MASS, JUPITER_MASS, CanvasManager */
+/* global STEP_INTERVAL, CanvasManager, CN */
 
 var Grav = (function () {
     var CANVAS_ID = 'svgCanvas';
     var SAVE_OUT_AREA_ID = 'saveOutputArea';
     var running = false;
 
-    var X_STEP = 2;
-    var Y_STEP = 2;
-
     var SPEED_SCALE_FACTOR = 1 / 200;
-
     var SVG_CIRCLE_WIDTH = 5;
 
-    var selectedMass = MOON_MASS;
+    var selectedMass = CN.MOON_MASS;
     var selectedColor = 'grey';
 
     var tracesActive = false;
@@ -34,7 +30,7 @@ var Grav = (function () {
     }
 
     function getMaxDimensions() {
-        svgCanvas = document.getElementById('svgCanvas');
+        svgCanvas = document.getElementById(CANVAS_ID);
         var dimensions = new Object();
         dimensions[0] = parseInt(svgCanvas.getAttribute('width'), 10);
         dimensions[1] = parseInt(svgCanvas.getAttribute('height'), 10);
@@ -67,13 +63,6 @@ var Grav = (function () {
             function () {
                 CanvasManager.eraseShape(this);
             });
-    }
-
-    function getTestShape() {
-        svgShape = document.getElementById(CIRCLE_ID);
-        svgShape.moveXStep = moveXStep;
-        svgShape.moveYStep = moveYStep;
-        return svgShape;
     }
 
     function gameLoop() {
@@ -136,38 +125,20 @@ var Grav = (function () {
     }
 
     function createCircle(circleId, centerX, centerY, radius, color) {
-        var element = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        element.setAttribute('id', circleId);
-        element.setAttribute('cx', centerX);
-        element.setAttribute('cy', centerY);
-        element.setAttribute('r', radius);
-        element.setAttribute('fill', color);
+        var element = CanvasManager.createCircle(circleId, centerX, centerY, radius, color);
+
         wrapWithMassProperty(element, selectedMass);
         CanvasManager.drawShape(element);
-        //  console.log(shapes);
+
         return element;
     }
 
-    function createRectangle(id, x, y, width, height, fill) {
-        var rectElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rectElement.setAttribute('x', x);
-        rectElement.setAttribute('y', y);
-        rectElement.setAttribute('width', width);
-        rectElement.setAttribute('height', height);
-        rectElement.setAttribute('fill', fill);
-        rectElement.setAttribute('id', id);
-        CanvasManager.drawShape(rectElement);
-        return rectElement;
-    }
-
     function onSvgMouseDown(mouseEvent) {
-
-        mouseEvent.translate(CanvasManager.currentTranslation);
-
         var x = mouseEvent.getX();
         var y = mouseEvent.getY();
-
         var circle = createCircle('circle_' + nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
+
+        mouseEvent.translate(CanvasManager.currentTranslation);
 
         CanvasManager.getSvgCanvas().onmousemove = function (event) {
             drawSpeedVector(new MultiBrowserMouseEvent(event));
@@ -180,8 +151,8 @@ var Grav = (function () {
         lastVectorLine.setAttribute('x2', mouseEvent.getX());
         lastVectorLine.setAttribute('y2', mouseEvent.getY());
         lastVectorLine.setAttribute('style', 'stroke:rgb(255,0,0);stroke-width:1');
-        CanvasManager.drawShape(lastVectorLine);
         //
+        CanvasManager.drawShape(lastVectorLine);
         CanvasManager.getSvgCanvas().onmouseup = function (event) {
             onMouseUpAdd(circle);
         };
@@ -206,23 +177,24 @@ var Grav = (function () {
         shapes.push(circle);
         CanvasManager.eraseShape(lastVectorLine);
         CanvasManager.getSvgCanvas().onmousemove = function (e) {
+            // huh
         };
         console.log('END');
     }
 
     function setMoonMode() {
         selectedColor = 'grey';
-        selectedMass = MOON_MASS;
+        selectedMass = CN.MOON_MASS;
     }
 
     function setEarthMode() {
         selectedColor = 'blue';
-        selectedMass = EARTH_MASS;
+        selectedMass = CN.EARTH_MASS;
     }
 
     function setJupiterMode() {
         selectedColor = 'maroon';
-        selectedMass = JUPITER_MASS;
+        selectedMass = CN.JUPITER_MASS;
     }
 
     function toggleTraces() {
@@ -290,7 +262,6 @@ var Grav = (function () {
     }
 
     return self = {
-        CanvasManager: CanvasManager,
         setEarthMode: setEarthMode,
         setMoonMode: setMoonMode,
         setJupiterMode: setJupiterMode,

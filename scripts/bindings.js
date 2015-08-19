@@ -10,16 +10,16 @@ $('.btnJupiterMass').click(Grav.setJupiterMode);
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 $('.btnUP').click(function () {
-    Grav.CanvasManager.translate(0, TRANSLATION_STEP);
+    CanvasManager.translate(0, TRANSLATION_STEP);
 });
 $('.btnLEFT').click(function () {
-    Grav.CanvasManager.translate(TRANSLATION_STEP, 0);
+    CanvasManager.translate(TRANSLATION_STEP, 0);
 });
 $('.btnRIGHT').click(function () {
-    Grav.CanvasManager.translate(-(TRANSLATION_STEP), 0);
+    CanvasManager.translate(-(TRANSLATION_STEP), 0);
 });
 $('.btnDOWN').click(function () {
-    Grav.CanvasManager.translate(0, -(TRANSLATION_STEP));
+    CanvasManager.translate(0, -(TRANSLATION_STEP));
 });
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
