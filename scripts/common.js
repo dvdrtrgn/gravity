@@ -35,7 +35,7 @@
 
  */
 
-/* global getSvgCanvas, CanvasManager */
+/* global CanvasManager */
 
 var G = 6.673E-11;
 var EARTH_MASS = 5.972E+24;
@@ -53,7 +53,13 @@ var VX_DEFAULT = 0;
 var VY_DEFAULT = 0;
 
 var traceCounter = 0;
-var TRANSFORM_ID = 'canvasTranslation';
+
+var idCounter = 0;
+
+function nextId() {
+    idCounter++;
+    return idCounter;
+}
 
 function createRectangle(id, x, y, width, height, fill) {
     var rectElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -74,12 +80,12 @@ function MultiBrowserMouseEvent(innerEvent) {
     this.yTranslation = 0;
 
     this.getX = function () {
-        var notTranslated = this.innerEvent.offsetX ? this.innerEvent.offsetX : this.innerEvent.clientX - getSvgCanvas().getBoundingClientRect().left;
+        var notTranslated = this.innerEvent.offsetX ? this.innerEvent.offsetX : this.innerEvent.clientX - CanvasManager.getSvgCanvas().getBoundingClientRect().left;
         return notTranslated - this.xTranslation;
     };
 
     this.getY = function () {
-        var notTranslated = this.innerEvent.offsetY ? this.innerEvent.offsetY : this.innerEvent.clientY - getSvgCanvas().getBoundingClientRect().top;
+        var notTranslated = this.innerEvent.offsetY ? this.innerEvent.offsetY : this.innerEvent.clientY - CanvasManager.getSvgCanvas().getBoundingClientRect().top;
         return notTranslated - this.yTranslation;
     };
 

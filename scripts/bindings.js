@@ -1,5 +1,5 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-/* global Grav */
+/* global Grav, CanvasManager */
 
 var TRANSLATION_STEP = 50;
 
@@ -32,7 +32,7 @@ $('#clearTraces').click(Grav.clearTraces);
 $('#save').click(Grav.saveSpaceBodies);
 $('#restore').click(Grav.restoreFromOutputArea);
 
-Grav.getSvgCanvas().onmousedown = function (e) {
+CanvasManager.getSvgCanvas().onmousedown = function (e) {
     Grav.onSvgMouseDown(new MultiBrowserMouseEvent(e));
 };
 

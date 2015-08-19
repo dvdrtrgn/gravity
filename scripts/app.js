@@ -17,9 +17,6 @@ var Grav = (function () {
 
     var tracesActive = false;
 
-    var idCounter = 0;
-
-
     var shapes = [];
 
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -70,10 +67,6 @@ var Grav = (function () {
             function () {
                 CanvasManager.eraseShape(this);
             });
-    }
-
-    function getSvgCanvas() {
-        return document.getElementById('svgCanvas');
     }
 
     function getTestShape() {
@@ -176,7 +169,7 @@ var Grav = (function () {
 
         var circle = createCircle('circle_' + nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
 
-        getSvgCanvas().onmousemove = function (event) {
+        CanvasManager.getSvgCanvas().onmousemove = function (event) {
             drawSpeedVector(new MultiBrowserMouseEvent(event));
         };
 
@@ -189,7 +182,7 @@ var Grav = (function () {
         lastVectorLine.setAttribute('style', 'stroke:rgb(255,0,0);stroke-width:1');
         CanvasManager.drawShape(lastVectorLine);
         //
-        getSvgCanvas().onmouseup = function (event) {
+        CanvasManager.getSvgCanvas().onmouseup = function (event) {
             onMouseUpAdd(circle);
         };
     }
@@ -212,7 +205,7 @@ var Grav = (function () {
 
         shapes.push(circle);
         CanvasManager.eraseShape(lastVectorLine);
-        getSvgCanvas().onmousemove = function (e) {
+        CanvasManager.getSvgCanvas().onmousemove = function (e) {
         };
         console.log('END');
     }
@@ -234,11 +227,6 @@ var Grav = (function () {
 
     function toggleTraces() {
         tracesActive = !tracesActive;
-    }
-
-    function nextId() {
-        idCounter++;
-        return idCounter;
     }
 
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -313,7 +301,6 @@ var Grav = (function () {
         clearTraces: clearTraces,
         saveSpaceBodies: saveSpaceBodies,
         restoreFromOutputArea: restoreFromOutputArea,
-        getSvgCanvas: getSvgCanvas,
         onSvgMouseDown: onSvgMouseDown,
     };
 })();
