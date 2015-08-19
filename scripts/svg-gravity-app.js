@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2015 Alberto Mercati
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/* global MOON_MASS, CIRCLE_ID, STEP_INTERVAL, EARTH_MASS, JUPITER_MASS */
 
 var CANVAS_ID = 'svgCanvas';
 var TRANSFORM_ID = 'canvasTranslation';
@@ -35,12 +37,11 @@ var tracesActive = false;
 
 var idCounter = 0;
 
-var currentTranslation = new(
-
-function CanvasTranslation() {
-    this.x = 0;
-    this.y = 0;
-})();
+var currentTranslation = new (
+    function CanvasTranslation() {
+        this.x = 0;
+        this.y = 0;
+    })();
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
@@ -86,19 +87,17 @@ function stop() {
 
 function reset() {
     $(shapes).each(
-
-    function () {
-        CanvasManager.eraseShape(this);
-    });
+        function () {
+            CanvasManager.eraseShape(this);
+        });
     shapes = new Array();
 }
 
 function clearTraces() {
     $('[name="trace"]').each(
-
-    function () {
-        CanvasManager.eraseShape(this);
-    });
+        function () {
+            CanvasManager.eraseShape(this);
+        });
 }
 
 function getSvgCanvas() {
@@ -123,18 +122,16 @@ function gameLoop() {
     /* end check*/
 
     $(shapes).each(
-
-    function () {
-        animateShapeFrame(this);
-    });
+        function () {
+            animateShapeFrame(this);
+        });
     $(shapes).each(
-
-    function () {
-        this.updatePosition();
-        if (tracesActive) {
-            this.drawTrace();
-        }
-    });
+        function () {
+            this.updatePosition();
+            if (tracesActive) {
+                this.drawTrace();
+            }
+        });
 
     if (running) {
         setTimeout(gameLoop, STEP_INTERVAL);
@@ -146,7 +143,7 @@ function animateShapeFrame(svgShape) {
         return;
     }
     for (i = 0; i < shapes.length; i++) {
-        if (shapes[i].id != svgShape.id) {
+        if (shapes[i].id !== svgShape.id) {
             if (svgShape.overlaps(shapes[i])) {
                 svgShape.mass += shapes[i].mass;
                 svgShape.vx += shapes[i].vx / (svgShape.mass - shapes[i].mass);
@@ -199,7 +196,7 @@ function createRectangle(id, x, y, width, height, fill) {
     rectElement.setAttribute('y', y);
     rectElement.setAttribute('width', width);
     rectElement.setAttribute('height', height);
-    rectElement.setAttribute('fill', fill)
+    rectElement.setAttribute('fill', fill);
     rectElement.setAttribute('id', id);
     CanvasManager.drawShape(rectElement);
     return rectElement;
@@ -227,7 +224,7 @@ function onSvgMouseDown(mouseEvent) {
     var circle = createCircle('circle_' + nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
 
     getSvgCanvas().onmousemove = function (event) {
-        drawSpeedVector(new MultiBrowserMouseEvent(event))
+        drawSpeedVector(new MultiBrowserMouseEvent(event));
     };
 
     // creates a line
@@ -240,7 +237,7 @@ function onSvgMouseDown(mouseEvent) {
     CanvasManager.drawShape(lastVectorLine);
     //
     getSvgCanvas().onmouseup = function (event) {
-        onMouseUpAdd(circle)
+        onMouseUpAdd(circle);
     };
 }
 
@@ -262,8 +259,9 @@ function onMouseUpAdd(circle) {
 
     shapes.push(circle);
     CanvasManager.eraseShape(lastVectorLine);
-    getSvgCanvas().onmousemove = function (e) {};
-    console.log('END')
+    getSvgCanvas().onmousemove = function (e) {
+    };
+    console.log('END');
 }
 
 function setMoonMode() {
@@ -292,36 +290,37 @@ function nextId() {
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-function CanvasManager() {}
+function CanvasManager() {
+}
 
 CanvasManager.drawShape = function (shape) {
     document.getElementById(TRANSFORM_ID).appendChild(shape);
-}
+};
 
 CanvasManager.eraseShape = function (shape) {
     document.getElementById(TRANSFORM_ID).removeChild(shape);
-}
+};
 
 CanvasManager.translate = function (xAdditionalShift, yAdditionalShift) {
     currentTranslation.x += xAdditionalShift;
     currentTranslation.y += yAdditionalShift;
     var transform = document.getElementById(TRANSFORM_ID);
     transform.setAttribute('transform', 'translate(' + currentTranslation.x + ', ' + currentTranslation.y + ')');
-}
+};
 
 CanvasManager.resetTranslation = function () {
     currentTranslation.x = 0;
     currentTranslation.y = 0;
     var transform = document.getElementById(TRANSFORM_ID);
     transform.setAttribute('transform', 'translate(0, 0)');
-}
+};
 
 CanvasManager.serializeState = function () {
     var canvas = getSvgCanvas();
     canvas = $(canvas);
     var traces = $(canvas).find('[name="trace"]').remove();
     return canvas.parent().html();
-}
+};
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
@@ -365,24 +364,22 @@ function restoreState(serializedAppState) {
     var circles = restoreBox.find('circle');
 
     $(circles).each(
-
-    function () {
-        CanvasManager.drawShape(this);
-    });
+        function () {
+            CanvasManager.drawShape(this);
+        });
 
     // TODO: restore gravitational properties
     var jsonString = restoreBox.children('script').html();
     var infos = JSON.parse(jsonString);
     $(infos).each(
-
-    function () {
-        var id = this.id;
-        var svgShape = document.getElementById(id);
-        wrapWithMassProperty(svgShape, this.mass);
-        svgShape.vx = this.vx;
-        svgShape.vy = this.vy;
-        shapes.push(svgShape);
-    });
+        function () {
+            var id = this.id;
+            var svgShape = document.getElementById(id);
+            wrapWithMassProperty(svgShape, this.mass);
+            svgShape.vx = this.vx;
+            svgShape.vy = this.vy;
+            shapes.push(svgShape);
+        });
 }
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
