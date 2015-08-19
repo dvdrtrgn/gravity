@@ -1,5 +1,37 @@
 /*
- * Copyright (C) 2015 Alberto Mercati see <http://www.gnu.org/licenses/>.
+
+    improvements
+        mass
+            make radius reflect mass
+            display mass quotients
+        enable keyboard
+            arrows (translate NSEW)
+            zoom out/in (Z / z)
+            speed up/down (S / s)
+        start with
+            tracings
+            unpaused
+
+
+    refactor
+        use reqAF
+        use closures
+
+        make config an object
+        make global an object
+
+        bind buttons dynamically
+
+    fix
+        drag out of bounds freezes new mass
+
+    figure out
+        text fields
+        collision handling
+
+    consider
+        make trace a path (instead of thousands of rects)
+
  */
 
 /* global getSvgCanvas */

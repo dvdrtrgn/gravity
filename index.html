@@ -13,9 +13,6 @@
     </head>
     <body>
         <h1>2D Gravity sandbox</h1>
-        <p>
-            Click inside the rectangle to add circles. Click "START" to activate the movement, "STOP" to deactivate.
-        </p>
         <div>
             <div style="width: 80%; float: left;">
                 <svg id="svgCanvas" width="500" height="500" style="border-style: solid; border-width: 11px;">
@@ -45,8 +42,8 @@
         </div>
         <div style="clear: both;"></div>
         <div>
-            <input type="button" id="startButton" name="startButton" value="START" onclick="start();">
-            <input type="button" id="stopButton" name="stopButton" value="STOP" onclick="stop();">
+            <input type="button" id="startButton" name="startButton" value="Play" onclick="start();">
+            <input type="button" id="stopButton" name="stopButton" value="Pause" onclick="stop();">
             <input type="button" id="resetButton" value="RESET" onclick="reset();">
             <input type="button" id="traceButton" value="TRACES" onclick="toggleTraces();">
             <input type="button" id="clearTraces" value="CLEAR TRACES" onclick="clearTraces();">
