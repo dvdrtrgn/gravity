@@ -54,14 +54,9 @@
         <!--
 
         -->
+        <script src="./scripts/canvas.js"></script>
         <script src="./scripts/common.js"></script>
         <script src="./scripts/app.js"></script>
         <script src="./scripts/bindings.js"></script>
-        <script>
-            /* global getSvgCanvas */
-            getSvgCanvas().onmousedown = function (e) {
-                onSvgMouseDown(new MultiBrowserMouseEvent(e));
-            };
-        </script>
     </body>
 </html>

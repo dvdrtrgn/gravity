@@ -35,7 +35,7 @@
 
  */
 
-/* global getSvgCanvas */
+/* global getSvgCanvas, CanvasManager */
 
 var G = 6.673E-11;
 var EARTH_MASS = 5.972E+24;
@@ -53,6 +53,19 @@ var VX_DEFAULT = 0;
 var VY_DEFAULT = 0;
 
 var traceCounter = 0;
+var TRANSFORM_ID = 'canvasTranslation';
+
+function createRectangle(id, x, y, width, height, fill) {
+    var rectElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rectElement.setAttribute('x', x);
+    rectElement.setAttribute('y', y);
+    rectElement.setAttribute('width', width);
+    rectElement.setAttribute('height', height);
+    rectElement.setAttribute('fill', fill);
+    rectElement.setAttribute('id', id);
+    CanvasManager.drawShape(rectElement);
+    return rectElement;
+}
 
 function MultiBrowserMouseEvent(innerEvent) {
     this.innerEvent = innerEvent;
