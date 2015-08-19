@@ -1,3 +1,4 @@
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /*
 
     improvements
@@ -166,3 +167,5 @@ function wrapWithMassProperty(svgElement, mass) {
         return squareDistance <= Math.pow(this.getRadius() * DISTANCE_SCALE_FACTOR + massiveObject.getRadius() * DISTANCE_SCALE_FACTOR, 2);
     };
 }
+console.log('common loaded');
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

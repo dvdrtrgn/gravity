@@ -8,58 +8,60 @@
         <link rel="stylesheet" type="text/css" href="./style.css">
 
         <script src="/lib/jquery/1.8.2/jquery.js"></script>
-        <script src="./scripts/common.js"></script>
-        <script src="./scripts/app.js"></script>
     </head>
     <body>
         <h1>2D Gravity sandbox</h1>
         <div>
-            <div style="width: 80%; float: left;">
-                <svg id="svgCanvas" width="500" height="500" style="border-style: solid; border-width: 11px;">
-                <g id="canvasTranslation" transform="translate(0, 0)"></g>
-                </svg>
-            </div>
+            <svg id="svgCanvas"><g id="canvasTranslation" transform="translate(0, 0)"></g></svg>
             <div id="rightBox">
-                <div> <input type="button" value="Earth Mass" onclick="setEarthMode();"> </div>
-                <div> <input type="button" value="Moon Mass" onclick="setMoonMode();"> </div>
-                <div> <input type="button" value="Jupiter Mass" onclick="setJupiterMode();"> </div>
-                <div id="translationInfoBox">
-                    <p> Translate the view </p>
+                <div>
+                    <input class="btnEarthMass" type="button" value="Earth Mass">
+                    <input class="btnMoonMass" type="button" value="Moon Mass">
+                    <input class="btnJupiterMass" type="button" value="Jupiter Mass">
                 </div>
-                <div id="translateButtonsBox" style="text-align: center;">
-                    <div id="upperBox">
-                        <input type="button" value="UP" onclick="CanvasManager.translate(0, TRANSLATION_STEP);">
-                    </div>
-                    <div id="middleBox">
-                        <input type="button" value="LEFT" onclick="CanvasManager.translate(TRANSLATION_STEP, 0);">
-                        <input type="button" value="RIGHT" onclick="CanvasManager.translate(-TRANSLATION_STEP, 0);">
-                    </div>
-                    <div id="bottomBox" style="text-align: center;">
-                        <input type="button" value="DOWN" onclick="CanvasManager.translate(0, -TRANSLATION_STEP);">
-                    </div>
+
+                <div id="translateButtonsBox">
+                    <p> Shift the view </p>
+                    <input class="btnUp" type="button" value="UP">
+                    <br class="clear">
+                    <input class="btnLeft" type="button" value="LEFT">
+                    <input class="btnRight" type="button" value="RIGHT">
+                    <br class="clear">
+                    <input class="btnDown" type="button" value="DOWN">
                 </div>
             </div>
         </div>
-        <div style="clear: both;"></div>
+
+        <br class="clear">
+
         <div>
-            <input type="button" id="startButton" name="startButton" value="Play" onclick="start();">
-            <input type="button" id="stopButton" name="stopButton" value="Pause" onclick="stop();">
-            <input type="button" id="resetButton" value="RESET" onclick="reset();">
-            <input type="button" id="traceButton" value="TRACES" onclick="toggleTraces();">
-            <input type="button" id="clearTraces" value="CLEAR TRACES" onclick="clearTraces();">
-            <input type="button" id="save" value="SAVE" onclick="saveSpaceBodies();">
-            <input type="button" id="restore" value="RESTORE" onclick="restoreFromOutputArea();">
+            <p>Controls</p>
+            <input type="button" id="startButton" name="startButton" value="Play">
+            <input type="button" id="stopButton" name="stopButton" value="Pause">
+            <input type="button" id="resetButton" value="RESET">
+            <input type="button" id="traceButton" value="TRACES">
+            <input type="button" id="clearTraces" value="CLEAR TRACES">
+            <input type="button" id="save" value="SAVE">
+            <input type="button" id="restore" value="RESTORE">
         </div>
+
+        <br class="clear">
+
         <div id="outputBox">
-            <input id="saveOutputArea" type="text" style="width: 600px;">
+            <input id="saveOutputArea" type="text">
         </div>
+        <div id="restoreStateBox"></div>
+        <!--
+
+        -->
+        <script src="./scripts/common.js"></script>
+        <script src="./scripts/app.js"></script>
+        <script src="./scripts/bindings.js"></script>
         <script>
             /* global getSvgCanvas */
             getSvgCanvas().onmousedown = function (e) {
                 onSvgMouseDown(new MultiBrowserMouseEvent(e));
             };
         </script>
-        <div id="restoreStateBox">
-        </div>
     </body>
 </html>
