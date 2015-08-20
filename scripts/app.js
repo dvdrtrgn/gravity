@@ -99,7 +99,7 @@ var Grav = (function () {
     }
 
     function onSvgMouseDown(mouseEvent) {
-        var x, y, circle;
+        var x, y, circle, canvas;
 
         mouseEvent.translate(Canvas.currentTranslation);
 
@@ -119,11 +119,13 @@ var Grav = (function () {
         lastVectorLine.setAttribute('x2', mouseEvent.getX());
         lastVectorLine.setAttribute('y2', mouseEvent.getY());
         lastVectorLine.setAttribute('style', 'stroke:rgb(255,0,0);stroke-width:1');
-        //
         Canvas.drawShape(lastVectorLine);
-        Canvas.getSvgCanvas().onmouseup = function (event) {
-            onMouseUpAdd(circle);
-        };
+        //
+        canvas = Canvas.getSvgCanvas();
+        canvas.onmouseleave = //
+            canvas.onmouseup = function () {
+                onMouseUpAdd(circle);
+            };
     }
 
     function drawSpeedVector(mouseEvent) {

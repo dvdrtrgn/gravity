@@ -9,7 +9,10 @@ var Canvas = (function () {
     };
 
     self.eraseShape = function (shape) {
-        document.getElementById(CF.TRANSFORM_ID).removeChild(shape);
+        try {
+            document.getElementById(CF.TRANSFORM_ID).removeChild(shape);
+        } catch (err) {
+        }
     };
 
     self.translate = function (xAdditionalShift, yAdditionalShift) {
