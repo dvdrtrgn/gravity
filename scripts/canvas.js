@@ -1,5 +1,5 @@
 var TRANSFORM_ID = 'canvasTranslation';
-var CanvasManager = (function () {
+var Canvas = (function () {
     function self() {
         // host
     }

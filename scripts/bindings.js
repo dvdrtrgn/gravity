@@ -1,5 +1,5 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-/* global Grav, CanvasManager */
+/* global Grav, Canvas */
 
 var TRANSLATION_STEP = 50;
 
@@ -10,16 +10,16 @@ $('.btnJupiterMass').click(Grav.setJupiterMode);
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 $('.btnUP').click(function () {
-    CanvasManager.translate(0, TRANSLATION_STEP);
+    Canvas.translate(0, TRANSLATION_STEP);
 });
 $('.btnLEFT').click(function () {
-    CanvasManager.translate(TRANSLATION_STEP, 0);
+    Canvas.translate(TRANSLATION_STEP, 0);
 });
 $('.btnRIGHT').click(function () {
-    CanvasManager.translate(-(TRANSLATION_STEP), 0);
+    Canvas.translate(-(TRANSLATION_STEP), 0);
 });
 $('.btnDOWN').click(function () {
-    CanvasManager.translate(0, -(TRANSLATION_STEP));
+    Canvas.translate(0, -(TRANSLATION_STEP));
 });
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -32,7 +32,7 @@ $('#clearTraces').click(Grav.clearTraces);
 $('#save').click(Grav.saveSpaceBodies);
 $('#restore').click(Grav.restoreFromOutputArea);
 
-CanvasManager.getSvgCanvas().onmousedown = function (e) {
+Canvas.getSvgCanvas().onmousedown = function (e) {
     Grav.onSvgMouseDown(new MultiBrowserMouseEvent(e));
 };
 

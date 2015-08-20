@@ -1,4 +1,4 @@
-/* global STEP_INTERVAL, CanvasManager, CN */
+/* global STEP_INTERVAL, Canvas, CN */
 
 var Grav = (function () {
     var self;
@@ -33,14 +33,14 @@ var Grav = (function () {
 
     function reset() {
         $(shapes).each(function () {
-            CanvasManager.eraseShape(this);
+            Canvas.eraseShape(this);
         });
         shapes = new Array();
     }
 
     function clearTraces() {
         $('[name="trace"]').each(function () {
-            CanvasManager.eraseShape(this);
+            Canvas.eraseShape(this);
         });
     }
 
@@ -51,7 +51,7 @@ var Grav = (function () {
             me = shapes[i];
 
             if (me.toBeRemoved) {
-                CanvasManager.eraseShape(me);
+                Canvas.eraseShape(me);
                 shapes.splice(i, 1);
             } else {
                 animateShapeFrame(me);
@@ -90,10 +90,10 @@ var Grav = (function () {
     }
 
     function createCircle(circleId, centerX, centerY, radius, color) {
-        var element = CanvasManager.createCircle(circleId, centerX, centerY, radius, color);
+        var element = Canvas.createCircle(circleId, centerX, centerY, radius, color);
 
         wrapWithMassProperty(element, selectedMass);
-        CanvasManager.drawShape(element);
+        Canvas.drawShape(element);
 
         return element;
     }
@@ -101,14 +101,14 @@ var Grav = (function () {
     function onSvgMouseDown(mouseEvent) {
         var x, y, circle;
 
-        mouseEvent.translate(CanvasManager.currentTranslation);
+        mouseEvent.translate(Canvas.currentTranslation);
 
         x = mouseEvent.getX();
         y = mouseEvent.getY();
         circle = createCircle('circle_' + nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
 
 
-        CanvasManager.getSvgCanvas().onmousemove = function (event) {
+        Canvas.getSvgCanvas().onmousemove = function (event) {
             drawSpeedVector(new MultiBrowserMouseEvent(event));
         };
 
@@ -120,14 +120,14 @@ var Grav = (function () {
         lastVectorLine.setAttribute('y2', mouseEvent.getY());
         lastVectorLine.setAttribute('style', 'stroke:rgb(255,0,0);stroke-width:1');
         //
-        CanvasManager.drawShape(lastVectorLine);
-        CanvasManager.getSvgCanvas().onmouseup = function (event) {
+        Canvas.drawShape(lastVectorLine);
+        Canvas.getSvgCanvas().onmouseup = function (event) {
             onMouseUpAdd(circle);
         };
     }
 
     function drawSpeedVector(mouseEvent) {
-        mouseEvent.translate(CanvasManager.currentTranslation);
+        mouseEvent.translate(Canvas.currentTranslation);
         lastVectorLine.setAttribute('x2', mouseEvent.getX());
         lastVectorLine.setAttribute('y2', mouseEvent.getY());
     }
@@ -144,8 +144,8 @@ var Grav = (function () {
         circle.vy = graphicYDiff * SPEED_SCALE_FACTOR;
 
         shapes.push(circle);
-        CanvasManager.eraseShape(lastVectorLine);
-        CanvasManager.getSvgCanvas().onmousemove = function (e) {
+        Canvas.eraseShape(lastVectorLine);
+        Canvas.getSvgCanvas().onmousemove = function (e) {
             // huh
         };
         console.log('END');
@@ -175,7 +175,7 @@ var Grav = (function () {
     function saveSpaceBodies() {
         var textState, script, spaceBodyInfos, bodyIndex;
 
-        textState = CanvasManager.serializeState();
+        textState = Canvas.serializeState();
 
         script = document.createElement('script');
         spaceBodyInfos = new Array();
@@ -217,7 +217,7 @@ var Grav = (function () {
         circles = restoreBox.find('circle');
 
         $(circles).each(function () {
-            CanvasManager.drawShape(this);
+            Canvas.drawShape(this);
         });
 
         // TODO: restore gravitational properties

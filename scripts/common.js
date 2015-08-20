@@ -1,5 +1,5 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-/* global CanvasManager */
+/* global Canvas */
 
 var CN = {
     G: 6.673E-11,
@@ -30,7 +30,7 @@ function MultiBrowserMouseEvent(innerEvent) {
         var notTranslated;
 
         notTranslated = this.innerEvent.offsetX ? this.innerEvent.offsetX :
-            this.innerEvent.clientX - CanvasManager.getSvgCanvas().getBoundingClientRect().left;
+            this.innerEvent.clientX - Canvas.getSvgCanvas().getBoundingClientRect().left;
 
         return notTranslated - this.xTranslation;
     };
@@ -39,7 +39,7 @@ function MultiBrowserMouseEvent(innerEvent) {
         var notTranslated;
 
         notTranslated = this.innerEvent.offsetY ? this.innerEvent.offsetY :
-            this.innerEvent.clientY - CanvasManager.getSvgCanvas().getBoundingClientRect().top;
+            this.innerEvent.clientY - Canvas.getSvgCanvas().getBoundingClientRect().top;
 
         return notTranslated - this.yTranslation;
     };
@@ -132,7 +132,7 @@ function wrapWithMassProperty(svgElement, mass) {
         y = this.getY();
 
         if (++this.traceCounter % 20 === 0) {
-            traceElement = CanvasManager.createRectangle('trace_' + nextId(), x, y, 1, 1, this.getAttribute('fill'));
+            traceElement = Canvas.createRectangle('trace_' + nextId(), x, y, 1, 1, this.getAttribute('fill'));
             traceElement.setAttribute('name', 'trace');
         }
     };
