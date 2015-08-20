@@ -27,14 +27,20 @@ function MultiBrowserMouseEvent(innerEvent) {
     this.yTranslation = 0;
 
     this.getX = function () {
-        var notTranslated = this.innerEvent.offsetX ? this.innerEvent.offsetX :
+        var notTranslated;
+
+        notTranslated = this.innerEvent.offsetX ? this.innerEvent.offsetX :
             this.innerEvent.clientX - CanvasManager.getSvgCanvas().getBoundingClientRect().left;
+
         return notTranslated - this.xTranslation;
     };
 
     this.getY = function () {
-        var notTranslated = this.innerEvent.offsetY ? this.innerEvent.offsetY :
+        var notTranslated;
+
+        notTranslated = this.innerEvent.offsetY ? this.innerEvent.offsetY :
             this.innerEvent.clientY - CanvasManager.getSvgCanvas().getBoundingClientRect().top;
+
         return notTranslated - this.yTranslation;
     };
 
@@ -120,17 +126,25 @@ function wrapWithMassProperty(svgElement, mass) {
     };
 
     svgElement.drawTrace = function () {
+        var traceElement, x, y;
+
+        x = this.getX();
+        y = this.getY();
+
         if (++this.traceCounter % 20 === 0) {
-//          var traceElement = createCircle("trace_" + nextId(), this.getX(), this.getY(), .5, this.getAttribute('fill'));
-            var traceElement = CanvasManager.createRectangle("trace_" + nextId(), this.getX(), this.getY(), 1, 1, this.getAttribute('fill'));
-//          var traceElement = createLine(this.getX(), this.getY(), this.getX(), this.getY());
+            traceElement = CanvasManager.createRectangle('trace_' + nextId(), x, y, 1, 1, this.getAttribute('fill'));
             traceElement.setAttribute('name', 'trace');
         }
     };
 
     svgElement.overlaps = function (massiveObject) {
-        var squareDistance = this.squareDistanceFrom(massiveObject);
-        return squareDistance <= Math.pow(this.getRadius() * DISTANCE_SCALE_FACTOR + massiveObject.getRadius() * DISTANCE_SCALE_FACTOR, 2);
+        var squareDistance, a, b;
+
+        squareDistance = this.squareDistanceFrom(massiveObject);
+        a = this.getRadius() * DISTANCE_SCALE_FACTOR;
+        b = massiveObject.getRadius() * DISTANCE_SCALE_FACTOR;
+
+        return squareDistance <= Math.pow(a + b, 2);
     };
 }
 console.log('common loaded');

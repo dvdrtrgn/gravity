@@ -8,10 +8,10 @@ var Grav = (function () {
     var SVG_CIRCLE_WIDTH = 5;
 
     var running = false;
-    var selectedColor = 'grey';
-    var selectedMass = CN.MOON_MASS;
+    var selectedColor = 'blue';
+    var selectedMass = CN.EARTH_MASS;
     var shapes = [];
-    var tracesActive = false;
+    var tracesActive = true;
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     function initSvg() {
