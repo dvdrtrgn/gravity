@@ -1,18 +1,19 @@
-var TRANSFORM_ID = 'canvasTranslation';
+/* global CF */
+
 var Canvas = (function () {
     function self() {
         // host
     }
     self.drawShape = function (shape) {
-        document.getElementById(TRANSFORM_ID).appendChild(shape);
+        document.getElementById(CF.TRANSFORM_ID).appendChild(shape);
     };
 
     self.eraseShape = function (shape) {
-        document.getElementById(TRANSFORM_ID).removeChild(shape);
+        document.getElementById(CF.TRANSFORM_ID).removeChild(shape);
     };
 
     self.translate = function (xAdditionalShift, yAdditionalShift) {
-        var transform = document.getElementById(TRANSFORM_ID);
+        var transform = document.getElementById(CF.TRANSFORM_ID);
 
         this.currentTranslation.x += xAdditionalShift;
         this.currentTranslation.y += yAdditionalShift;
@@ -21,7 +22,7 @@ var Canvas = (function () {
     };
 
     self.resetTranslation = function () {
-        var transform = document.getElementById(TRANSFORM_ID);
+        var transform = document.getElementById(CF.TRANSFORM_ID);
 
         this.currentTranslation.x = 0;
         this.currentTranslation.y = 0;

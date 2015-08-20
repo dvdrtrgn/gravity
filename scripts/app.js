@@ -1,4 +1,4 @@
-/* global STEP_INTERVAL, Canvas, CN */
+/* global Canvas, CN, CF */
 
 var Grav = (function () {
     var self;
@@ -63,25 +63,25 @@ var Grav = (function () {
             }
         }
         if (running) {
-            setTimeout(gameLoop, STEP_INTERVAL);
+            setTimeout(gameLoop, CF.STEP_INTERVAL);
         }
     }
 
     function animateShapeFrame(shape) {
         var i, me;
 
-        if (shape.toBeRemoved) return;
+        if (shape.toBeRemoved)
+            return;
 
         for (i = 0; i < shapes.length; i++) {
             me = shapes[i];
 
             if (me.id !== shape.id) {
                 if (shape.overlaps(me)) {
+                    me.toBeRemoved = true;
                     shape.mass += me.mass;
                     shape.vx += me.vx / (shape.mass - me.mass);
                     shape.vy += me.vy / (shape.mass - me.mass);
-                    /* marks the overlapping shape for removal */
-                    me.toBeRemoved = true;
                     continue;
                 }
                 shape.addForce(me);
