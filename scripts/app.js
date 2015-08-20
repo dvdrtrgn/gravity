@@ -21,22 +21,6 @@ var Grav = (function () {
         console.log('Client Application initialization started...');
     })();
 
-    function getMaxX() {
-        return getMaxDimensions()[0];
-    }
-
-    function getMaxY() {
-        return getMaxDimensions()[1];
-    }
-
-    function getMaxDimensions() {
-        svgCanvas = document.getElementById(CANVAS_ID);
-        var dimensions = new Object();
-        dimensions[0] = parseInt(svgCanvas.getAttribute('width'), 10);
-        dimensions[1] = parseInt(svgCanvas.getAttribute('height'), 10);
-        return dimensions;
-    }
-
     function start() {
         if (running) {
             return;
