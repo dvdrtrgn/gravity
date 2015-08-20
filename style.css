@@ -1,6 +1,8 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 @media screen {
-
+    * {
+        box-sizing: border-box;
+    }
     html {
         font-size: 1em;
     }
@@ -15,7 +17,7 @@
         font-family: Courier;
     }
     .active {
-        color: green;
+        color: lime;
         font-weight: bold;
     }
     .broken {
@@ -30,17 +32,18 @@
         float: right;
         padding: 5px;
         text-align: center;
+        width: 20%;
     }
     .saveOutputArea {
         height: 33%;
-        width: 66%;
+        width: 80%;
     }
     .svgCanvas {
         border-style: solid;
         border-width: 1px;
         cursor: pointer;
         height: 50%;
-        width: 66%;
+        width: 80%;
         -webkit-user-drag: none;
     }
     .translateButtonsBox {
