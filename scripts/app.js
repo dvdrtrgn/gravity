@@ -1,6 +1,6 @@
 /* global Canvas, CN, CF */
 
-var Grav = (function () {
+var Grav = (function (Canvas, CN, CF) {
     var self;
 
     var SAVE_OUT_AREA_SEL = 'saveOutputArea';
@@ -253,7 +253,7 @@ var Grav = (function () {
 
     return initSvg();
 
-})();
+}(Canvas, CN, CF));
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /*

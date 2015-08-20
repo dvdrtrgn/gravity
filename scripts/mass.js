@@ -99,5 +99,6 @@ function wrapWithMassProperty(svgElement, mass) {
         return squareDistance <= Math.pow(a + b, 2);
     };
 }
-console.log('canvas loaded');
+
+console.log('mass loaded');
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

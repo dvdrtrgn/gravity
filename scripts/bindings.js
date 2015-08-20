@@ -16,15 +16,39 @@
     function down() {
         Canvas.translate(0, -(TRANSLATION_STEP));
     }
+    function activate(ele, klass) {
+        $(klass).removeClass('active');
+        $(ele).addClass('active');
+    }
+    function toggle(ele, klass) {
+        var me = $(ele);
 
-    $('.btnEarthMass').click(Grav.setEarthMode);
-    $('.btnMoonMass').click(Grav.setMoonMode);
-    $('.btnJupiterMass').click(Grav.setJupiterMode);
+        if (me.is('.' + klass)) {
+            me.removeClass(klass);
+            return false;
+        } else {
+            me.addClass(klass);
+            return true;
+        }
+    }
 
-    $('.btnUP').click(up);
-    $('.btnLEFT').click(left);
-    $('.btnRIGHT').click(right);
-    $('.btnDOWN').click(down);
+    $('.btn.earth.mass').click(function () {
+        Grav.setEarthMode();
+        activate(this, '.btn.mass');
+    });
+    $('.btn.moon.mass').click(function () {
+        Grav.setMoonMode();
+        activate(this, '.btn.mass');
+    });
+    $('.btn.jupiter.mass').click(function () {
+        Grav.setJupiterMode();
+        activate(this, '.btn.mass');
+    });
+
+    $('.btn.up').click(up);
+    $('.btn.left').click(left);
+    $('.btn.right').click(right);
+    $('.btn.down').click(down);
 
     $('body').keydown(function (evt) {
         switch (evt.keyCode) {
@@ -39,13 +63,19 @@
         }
     });
 
-    $('.startButton').click(Grav.start);
-    $('.stopButton').click(Grav.stop);
-    $('.resetButton').click(Grav.reset);
-    $('.traceButton').click(Grav.toggleTraces);
-    $('.clearTraces').click(Grav.clearTraces);
-    $('.save').click(Grav.saveSpaceBodies);
-    $('.restore').click(Grav.restoreFromOutputArea);
+    $('.start.btn').click(function () {
+        toggle(this, 'active') ? Grav.start() : Grav.stop();
+    });
+
+    $('.trace.btn').click(function () {
+        toggle(this, 'active');
+        Grav.toggleTraces();
+    });
+    $('.cleartraces.btn').click(Grav.clearTraces);
+
+    $('.save.btn').click(Grav.saveSpaceBodies);
+    $('.restore.btn').click(Grav.restoreFromOutputArea);
+    $('.reset.btn').click(Grav.reset);
 
     Canvas.getSvgCanvas().onmousedown = function (e) {
         Grav.onSvgMouseDown(new MultiBrowserMouseEvent(e));
