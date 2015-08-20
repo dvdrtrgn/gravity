@@ -1,33 +1,30 @@
 /* global STEP_INTERVAL, CanvasManager, CN */
 
 var Grav = (function () {
-    var CANVAS_ID = 'svgCanvas';
-    var SAVE_OUT_AREA_ID = 'saveOutputArea';
-    var running = false;
+    var self;
 
+    var SAVE_OUT_AREA_ID = 'saveOutputArea';
     var SPEED_SCALE_FACTOR = 1 / 200;
     var SVG_CIRCLE_WIDTH = 5;
 
-    var selectedMass = CN.MOON_MASS;
+    var running = false;
     var selectedColor = 'grey';
-
-    var tracesActive = false;
-
+    var selectedMass = CN.MOON_MASS;
     var shapes = [];
-
+    var tracesActive = false;
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-    (function initSvg() {
+    function initSvg() {
         console.log('Client Application initialization started...');
-    })();
+        return self;
+    }
 
     function start() {
         if (running) {
             return;
         }
         running = true;
-        // animateFrame();
-        gameLoop();
+        gameLoop(); // animateFrame();
     }
 
     function stop() {
@@ -35,77 +32,61 @@ var Grav = (function () {
     }
 
     function reset() {
-        $(shapes).each(
-            function () {
-                CanvasManager.eraseShape(this);
-            });
+        $(shapes).each(function () {
+            CanvasManager.eraseShape(this);
+        });
         shapes = new Array();
     }
 
     function clearTraces() {
-        $('[name="trace"]').each(
-            function () {
-                CanvasManager.eraseShape(this);
-            });
+        $('[name="trace"]').each(function () {
+            CanvasManager.eraseShape(this);
+        });
     }
 
     function gameLoop() {
-        /* checks for shapes to remove */
+        var i, me;
+
         for (i = 0; i < shapes.length; i++) {
-            if (shapes[i].toBeRemoved) {
-                CanvasManager.eraseShape(shapes[i]);
+            me = shapes[i];
+
+            if (me.toBeRemoved) {
+                CanvasManager.eraseShape(me);
                 shapes.splice(i, 1);
+            } else {
+                animateShapeFrame(me);
+                me.updatePosition();
+
+                if (tracesActive) {
+                    me.drawTrace();
+                }
             }
         }
-        /* end check*/
-
-        $(shapes).each(
-            function () {
-                animateShapeFrame(this);
-            });
-        $(shapes).each(
-            function () {
-                this.updatePosition();
-                if (tracesActive) {
-                    this.drawTrace();
-                }
-            });
-
         if (running) {
             setTimeout(gameLoop, STEP_INTERVAL);
         }
     }
 
-    function animateShapeFrame(svgShape) {
-        if (svgShape.toBeRemoved) {
-            return;
-        }
+    function animateShapeFrame(shape) {
+        var i, me;
+
+        if (shape.toBeRemoved) return;
+
         for (i = 0; i < shapes.length; i++) {
-            if (shapes[i].id !== svgShape.id) {
-                if (svgShape.overlaps(shapes[i])) {
-                    svgShape.mass += shapes[i].mass;
-                    svgShape.vx += shapes[i].vx / (svgShape.mass - shapes[i].mass);
-                    svgShape.vy += shapes[i].vy / (svgShape.mass - shapes[i].mass);
+            me = shapes[i];
+
+            if (me.id !== shape.id) {
+                if (shape.overlaps(me)) {
+                    shape.mass += me.mass;
+                    shape.vx += me.vx / (shape.mass - me.mass);
+                    shape.vy += me.vy / (shape.mass - me.mass);
                     /* marks the overlapping shape for removal */
-                    shapes[i].toBeRemoved = true;
+                    me.toBeRemoved = true;
                     continue;
                 }
-
-                svgShape.addForce(shapes[i]);
+                shape.addForce(me);
             }
         }
-    }
-
-    function moveXStep(stepLength) {
-        var currentX = parseInt(this.getAttribute('cx'));
-        var nextX = currentX + stepLength;
-        this.setAttribute('cx', nextX);
-    }
-
-    function moveYStep(stepLength) {
-        var currentY = parseInt(this.getAttribute('cy'));
-        var nextY = currentY + stepLength;
-        this.setAttribute('cy', nextY);
     }
 
     function createCircle(circleId, centerX, centerY, radius, color) {
@@ -118,11 +99,14 @@ var Grav = (function () {
     }
 
     function onSvgMouseDown(mouseEvent) {
-        var x = mouseEvent.getX();
-        var y = mouseEvent.getY();
-        var circle = createCircle('circle_' + nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
+        var x, y, circle;
 
         mouseEvent.translate(CanvasManager.currentTranslation);
+
+        x = mouseEvent.getX();
+        y = mouseEvent.getY();
+        circle = createCircle('circle_' + nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
+
 
         CanvasManager.getSvgCanvas().onmousemove = function (event) {
             drawSpeedVector(new MultiBrowserMouseEvent(event));
@@ -149,10 +133,11 @@ var Grav = (function () {
     }
 
     function onMouseUpAdd(circle) {
+        var graphicXDiff, graphicYDiff;
 
         // gets the length of the graphic vector and computer the corresponding speed:
-        var graphicXDiff = parseFloat(lastVectorLine.getAttribute('x2')) - parseFloat(lastVectorLine.getAttribute('x1'));
-        var graphicYDiff = parseFloat(lastVectorLine.getAttribute('y2')) - parseFloat(lastVectorLine.getAttribute('y1'));
+        graphicXDiff = parseFloat(lastVectorLine.getAttribute('x2')) - parseFloat(lastVectorLine.getAttribute('x1'));
+        graphicYDiff = parseFloat(lastVectorLine.getAttribute('y2')) - parseFloat(lastVectorLine.getAttribute('y1'));
 
         // the speed components are proportional to the graphic components
         circle.vx = graphicXDiff * SPEED_SCALE_FACTOR;
@@ -188,11 +173,13 @@ var Grav = (function () {
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     function saveSpaceBodies() {
-        var textState = CanvasManager.serializeState();
+        var textState, script, spaceBodyInfos, bodyIndex;
 
-        var script = document.createElement('script');
-        var spaceBodyInfos = new Array();
-        var bodyIndex = 0;
+        textState = CanvasManager.serializeState();
+
+        script = document.createElement('script');
+        spaceBodyInfos = new Array();
+        bodyIndex = 0;
 
         $(shapes).select('[id*="circle"]').each(function () {
             spaceBodyInfos.push(new SpaceBodyInfo(this.id, this.mass, this.vx, this.vy));
@@ -213,39 +200,41 @@ var Grav = (function () {
 
     function restoreFromOutputArea() {
         var text = $('#' + SAVE_OUT_AREA_ID).val();
+
         restoreState(text);
     }
 
     function restoreState(serializedAppState) {
+        var restoreBox, circles, jsonString, infos;
+
         stop();
         reset();
         clearTraces();
 
-        var restoreBox = document.createElement('div');
+        restoreBox = document.createElement('div');
         restoreBox = $(restoreBox);
         restoreBox.html(serializedAppState);
-        var circles = restoreBox.find('circle');
+        circles = restoreBox.find('circle');
 
-        $(circles).each(
-            function () {
-                CanvasManager.drawShape(this);
-            });
+        $(circles).each(function () {
+            CanvasManager.drawShape(this);
+        });
 
         // TODO: restore gravitational properties
-        var jsonString = restoreBox.children('script').html();
-        var infos = JSON.parse(jsonString);
-        $(infos).each(
-            function () {
-                var id = this.id;
-                var svgShape = document.getElementById(id);
-                wrapWithMassProperty(svgShape, this.mass);
-                svgShape.vx = this.vx;
-                svgShape.vy = this.vy;
-                shapes.push(svgShape);
-            });
+        jsonString = restoreBox.children('script').html();
+        infos = JSON.parse(jsonString);
+        $(infos).each(function () {
+            var id = this.id;
+            var svgShape = document.getElementById(id);
+
+            wrapWithMassProperty(svgShape, this.mass);
+            svgShape.vx = this.vx;
+            svgShape.vy = this.vy;
+            shapes.push(svgShape);
+        });
     }
 
-    return self = {
+    self = {
         setEarthMode: setEarthMode,
         setMoonMode: setMoonMode,
         setJupiterMode: setJupiterMode,
@@ -258,6 +247,9 @@ var Grav = (function () {
         restoreFromOutputArea: restoreFromOutputArea,
         onSvgMouseDown: onSvgMouseDown,
     };
+
+    return initSvg();
+
 })();
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

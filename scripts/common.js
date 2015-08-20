@@ -23,17 +23,18 @@ function nextId() {
 
 function MultiBrowserMouseEvent(innerEvent) {
     this.innerEvent = innerEvent;
-
     this.xTranslation = 0;
     this.yTranslation = 0;
 
     this.getX = function () {
-        var notTranslated = this.innerEvent.offsetX ? this.innerEvent.offsetX : this.innerEvent.clientX - CanvasManager.getSvgCanvas().getBoundingClientRect().left;
+        var notTranslated = this.innerEvent.offsetX ? this.innerEvent.offsetX :
+            this.innerEvent.clientX - CanvasManager.getSvgCanvas().getBoundingClientRect().left;
         return notTranslated - this.xTranslation;
     };
 
     this.getY = function () {
-        var notTranslated = this.innerEvent.offsetY ? this.innerEvent.offsetY : this.innerEvent.clientY - CanvasManager.getSvgCanvas().getBoundingClientRect().top;
+        var notTranslated = this.innerEvent.offsetY ? this.innerEvent.offsetY :
+            this.innerEvent.clientY - CanvasManager.getSvgCanvas().getBoundingClientRect().top;
         return notTranslated - this.yTranslation;
     };
 
@@ -45,15 +46,11 @@ function MultiBrowserMouseEvent(innerEvent) {
 
 function wrapWithMassProperty(svgElement, mass) {
     svgElement.toBeRemoved = false;
-
     svgElement.mass = mass;
-
     svgElement.ax = 0;
     svgElement.ay = 0;
-
     svgElement.vx = 0;
     svgElement.vy = 0;
-
     svgElement.traceCounter = 0;
 
     svgElement.getX = function () {
@@ -69,49 +66,51 @@ function wrapWithMassProperty(svgElement, mass) {
     };
 
     svgElement.forceBetween = function (massiveObject) {
-        var squareDistance = this.squareDistanceFrom(massiveObject);
-        var force = CN.G * (this.mass * massiveObject.mass) / squareDistance;
+        var squareDistance, force;
+
+        squareDistance = this.squareDistanceFrom(massiveObject);
+        force = CN.G * (this.mass * massiveObject.mass) / squareDistance;
 
         return -1 * force;
     };
 
     svgElement.squareDistanceFrom = function (svgShape) {
-        var xDiff = (this.getX() - svgShape.getX()) * DISTANCE_SCALE_FACTOR;
-        var yDiff = (this.getY() - svgShape.getY()) * DISTANCE_SCALE_FACTOR;
-        var squareDistance = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
+        var xDiff, yDiff, squareDistance;
+
+        xDiff = (this.getX() - svgShape.getX()) * DISTANCE_SCALE_FACTOR;
+        yDiff = (this.getY() - svgShape.getY()) * DISTANCE_SCALE_FACTOR;
+        squareDistance = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
 
         return squareDistance;
     };
 
     svgElement.addForce = function (massiveObject) {
-        var forceMagnitude = this.forceBetween(massiveObject);
-        var squareDistance = this.squareDistanceFrom(massiveObject);
-        var distance = Math.sqrt(squareDistance);
+        var forceMagnitude, squareDistance, distance,
+            xDiff, yDiff, xRatio, yRatio, fx, fy;
 
-        var xDiff = (this.getX() - massiveObject.getX()) * DISTANCE_SCALE_FACTOR;
-        var yDiff = (this.getY() - massiveObject.getY()) * DISTANCE_SCALE_FACTOR;
+        forceMagnitude = this.forceBetween(massiveObject);
+        squareDistance = this.squareDistanceFrom(massiveObject);
+        distance = Math.sqrt(squareDistance);
 
-        var xRatio = xDiff / distance;
-        var yRatio = yDiff / distance;
-
-        var fx = forceMagnitude * xRatio;
-        var fy = forceMagnitude * yRatio;
+        xDiff = (this.getX() - massiveObject.getX()) * DISTANCE_SCALE_FACTOR;
+        yDiff = (this.getY() - massiveObject.getY()) * DISTANCE_SCALE_FACTOR;
+        xRatio = xDiff / distance;
+        yRatio = yDiff / distance;
+        fx = forceMagnitude * xRatio;
+        fy = forceMagnitude * yRatio;
 
         this.ax = this.ax + fx / this.mass;
         this.ay = this.ay + fy / this.mass;
     };
 
     svgElement.updatePosition = function () {
+        var nextX, nextY;
+
         this.vx = this.vx + this.ax * STEP_INTERVAL;
         this.vy = this.vy + this.ay * STEP_INTERVAL;
 
-        var nextX = this.getX() + (this.vx * STEP_INTERVAL);// + (1/2 * this.ax * STEP_INTERVAL * STEP_INTERVAL);
-        var nextY = this.getY() + (this.vy * STEP_INTERVAL);// + (1/2 * this.ay * STEP_INTERVAL * STEP_INTERVAL);
-
-//      var nextX = this.getX() + (1/2 * this.ax * STEP_INTERVAL * STEP_INTERVAL);
-//      var nextY = this.getY() + (1/2 * this.ay * STEP_INTERVAL * STEP_INTERVAL);
-
-//      console.log("new position: (" + nextX + ", " + nextY + ")");
+        nextX = this.getX() + (this.vx * STEP_INTERVAL);
+        nextY = this.getY() + (this.vy * STEP_INTERVAL);
 
         this.setAttribute('cx', nextX);
         this.setAttribute('cy', nextY);
