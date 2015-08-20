@@ -53,7 +53,7 @@ var Canvas = (function () {
         return document.getElementById('svgCanvas');
     };
 
-    self.createCircle = function(circleId, centerX, centerY, radius, color) {
+    self.createCircle = function (circleId, centerX, centerY, radius, color) {
         var element = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         element.setAttribute('id', circleId);

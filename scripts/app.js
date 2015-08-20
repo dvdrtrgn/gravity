@@ -20,9 +20,9 @@ var Grav = (function () {
     }
 
     function start() {
-        if (running) {
+        if (running)
             return;
-        }
+
         running = true;
         gameLoop(); // animateFrame();
     }
