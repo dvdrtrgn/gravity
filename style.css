@@ -8,17 +8,15 @@
     }
     body {
         -webkit-user-select: none;
+        font-family: Courier;
     }
 
-    h1 {
-        font-family: Courier;
-    }
-    p {
-        font-family: Courier;
-    }
     .active {
         color: lime;
         font-weight: bold;
+    }
+    .active:before {
+        content: 'on';
     }
     .broken {
         color: #ccc;
@@ -49,6 +47,8 @@
     .translateButtonsBox {
         text-align: center;
     }
-
+    #Restore {
+        display: none;
+    }
 }
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

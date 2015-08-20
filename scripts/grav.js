@@ -4,6 +4,7 @@ var Grav = (function (Canvas, CN, CF) {
     var self;
 
     var SAVE_OUT_AREA_SEL = '.saveOutputArea';
+    var RESTORE_SEL = '#Restore';
     var SPEED_SCALE_FACTOR = 1 / 200;
     var SVG_CIRCLE_WIDTH = 5;
 
@@ -15,8 +16,10 @@ var Grav = (function (Canvas, CN, CF) {
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     function initSvg() {
-        this.SAVE_OUT_AREA = $(SAVE_OUT_AREA_SEL)
-        console.log('Client Application initialization started...');
+        self.SAVE_OUT_AREA = $(SAVE_OUT_AREA_SEL);
+        self.RESTORE = $(RESTORE_SEL);
+
+        console.log('grav inited', self);
         start();
         return self;
     }
@@ -192,7 +195,7 @@ var Grav = (function (Canvas, CN, CF) {
 
         script.innerHTML = JSON.stringify(spaceBodyInfos);
         textState += script.outerHTML;
-        this.SAVE_OUT_AREA.val(textState);
+        self.SAVE_OUT_AREA.val(textState);
     }
 
     function SpaceBodyInfo(id, mass, vx, vy) {
@@ -203,30 +206,27 @@ var Grav = (function (Canvas, CN, CF) {
     }
 
     function restoreFromOutputArea() {
-        var text = this.SAVE_OUT_AREA.val();
+        var text = self.SAVE_OUT_AREA.val();
 
         restoreState(text);
     }
 
     function restoreState(serializedAppState) {
-        var restoreBox, circles, jsonString, infos;
+        var circles, jsonString, infos;
 
-        stop();
         reset();
         clearTraces();
 
-        restoreBox = document.createElement('div');
-        restoreBox = $(restoreBox);
-        restoreBox.html(serializedAppState);
-        circles = restoreBox.find('circle');
+        self.RESTORE[0].innerHTML = serializedAppState;
+        circles = self.RESTORE.find('circle');
 
         $(circles).each(function () {
             Canvas.drawShape(this);
         });
 
         // TODO: restore gravitational properties
-        jsonString = restoreBox.children('script').html();
-        infos = JSON.parse(jsonString);
+        jsonString = self.RESTORE.children('script');
+        infos = JSON.parse(jsonString.html());
         $(infos).each(function () {
             var id = this.id;
             var svgShape = document.getElementById(id);
@@ -239,6 +239,7 @@ var Grav = (function (Canvas, CN, CF) {
     }
 
     self = {
+        init: initSvg,
         setEarthMode: setEarthMode,
         setMoonMode: setMoonMode,
         setJupiterMode: setJupiterMode,
@@ -252,7 +253,7 @@ var Grav = (function (Canvas, CN, CF) {
         onSvgMouseDown: onSvgMouseDown,
     };
 
-    return initSvg();
+    return self.init();
 
 }(Canvas, CN, CF));
 

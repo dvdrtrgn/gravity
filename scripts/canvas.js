@@ -1,13 +1,13 @@
 /* global CF */
 
 var Canvas = (function (canvaSel, transSel) {
-    function self() {
-        // host
-    }
+    var self = {};
+
     self.init = function () {
         this.CANVAS = $(canvaSel)[0];
         this.TRANSFORM = $(transSel)[0];
-        console.log('canvas loaded', this);
+
+        console.log('canvas inited', this);
         return this;
     };
 
@@ -42,7 +42,7 @@ var Canvas = (function (canvaSel, transSel) {
         canvas = $(canvas);
         $(canvas).find('[name="trace"]').remove();
 
-        return canvas.parent().html();
+        return canvas.get(0).outerHTML;
     };
 
     self.currentTranslation = new (
