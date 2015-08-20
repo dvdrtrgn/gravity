@@ -18,27 +18,26 @@
     .clear {
         clear: both;
     }
-
-    #rightBox {
+    .rightBox {
         border-width: 1px;
         border-style: solid;
         float: right;
         padding: 5px;
         text-align: center;
     }
-    #translateButtonsBox {
-        text-align: center;
-    }
-    #saveOutputArea {
+    .saveOutputArea {
         width: 600px;
     }
-    #svgCanvas {
+    .svgCanvas {
         border-style: solid;
         border-width: 1px;
         cursor: pointer;
         height: 500px;
         width: 500px;
         -webkit-user-drag: none;
+    }
+    .translateButtonsBox {
+        text-align: center;
     }
 
 }

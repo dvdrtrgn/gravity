@@ -3,7 +3,7 @@
 var Grav = (function () {
     var self;
 
-    var SAVE_OUT_AREA_ID = 'saveOutputArea';
+    var SAVE_OUT_AREA_SEL = 'saveOutputArea';
     var SPEED_SCALE_FACTOR = 1 / 200;
     var SVG_CIRCLE_WIDTH = 5;
 
@@ -16,6 +16,7 @@ var Grav = (function () {
 
     function initSvg() {
         console.log('Client Application initialization started...');
+        start();
         return self;
     }
 
@@ -190,7 +191,7 @@ var Grav = (function () {
 
         script.innerHTML = JSON.stringify(spaceBodyInfos);
         textState += script.outerHTML;
-        $('#' + SAVE_OUT_AREA_ID).val(textState);
+        $('.' + SAVE_OUT_AREA_SEL).val(textState);
     }
 
     function SpaceBodyInfo(id, mass, vx, vy) {
@@ -201,7 +202,7 @@ var Grav = (function () {
     }
 
     function restoreFromOutputArea() {
-        var text = $('#' + SAVE_OUT_AREA_ID).val();
+        var text = $('.' + SAVE_OUT_AREA_SEL).val();
 
         restoreState(text);
     }

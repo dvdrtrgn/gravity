@@ -1,9 +1,8 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-/* global Canvas */
-
 var CF = {
     STEP_INTERVAL: 0.41, // 0.041 for 24 frames per seconds
-    TRANSFORM_ID: 'canvasTranslation',
+    TRANSFORM_SEL: '.canvasTranslation',
+    CANVAS_SEL: '.svgCanvas',
 };
 
 var CN = {
@@ -24,6 +23,7 @@ function nextId() {
 }
 
 function MultiBrowserMouseEvent(innerEvent) {
+    /* global Canvas */
     this.innerEvent = innerEvent;
     this.xTranslation = 0;
     this.yTranslation = 0;
@@ -51,7 +51,6 @@ function MultiBrowserMouseEvent(innerEvent) {
         this.yTranslation = translation.y;
     };
 }
-
 
 console.log('common loaded');
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

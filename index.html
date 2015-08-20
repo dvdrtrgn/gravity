@@ -11,15 +11,15 @@
     </head>
     <body>
         <h1>2D Gravity sandbox</h1>
-        <svg id="svgCanvas"><g id="canvasTranslation" transform="translate(0, 0)"></g></svg>
-        <div id="rightBox">
+        <svg class="svgCanvas"><g class="canvasTranslation" transform="translate(0, 0)"></g></svg>
+        <div class="rightBox">
             <div>
-                <input class="btnEarthMass" type="button" value="Earth Mass">
                 <input class="btnMoonMass" type="button" value="Moon Mass">
+                <input class="btnEarthMass" type="button" value="Earth Mass">
                 <input class="btnJupiterMass" type="button" value="Jupiter Mass">
             </div>
 
-            <div id="translateButtonsBox">
+            <div class="translateButtonsBox">
                 <p> Shift the view </p>
                 <input class="btnUp" type="button" value="UP">
                 <br class="clear">
@@ -35,24 +35,24 @@
 
         <div>
             <p>Controls</p>
-            <input type="button" id="startButton" name="startButton" value="Play">
-            <input type="button" id="stopButton" name="stopButton" value="Pause">
-            <input type="button" id="resetButton" value="RESET">
-            <input type="button" id="traceButton" value="TRACES">
-            <input type="button" id="clearTraces" value="CLEAR TRACES">
-            <input type="button" id="save" value="SAVE">
-            <input type="button" id="restore" value="RESTORE">
+            <input type="button" class="startButton" name="startButton" value="Play">
+            <input type="button" class="stopButton" name="stopButton" value="Pause">
+            <input type="button" class="resetButton" value="RESET">
+            <input type="button" class="traceButton" value="TRACES">
+            <input type="button" class="clearTraces" value="CLEAR TRACES">
+            <input type="button" class="save" value="SAVE">
+            <input type="button" class="restore" value="RESTORE">
         </div>
         <br class="clear">
 
-        <div id="outputBox">
-            <input id="saveOutputArea" type="text">
+        <div class="outputBox">
+            <input class="saveOutputArea" type="text">
         </div>
         <!--
 
         -->
-        <script src="./scripts/canvas.js"></script>
         <script src="./scripts/common.js"></script>
+        <script src="./scripts/canvas.js"></script>
         <script src="./scripts/mass.js"></script>
         <script src="./scripts/app.js"></script>
         <script src="./scripts/bindings.js"></script>

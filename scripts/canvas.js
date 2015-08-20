@@ -1,36 +1,39 @@
 /* global CF */
 
-var Canvas = (function () {
+var Canvas = (function (canvaSel, transSel) {
     function self() {
         // host
     }
+    self.init = function () {
+        this.CANVAS = $(canvaSel)[0];
+        this.TRANSFORM = $(transSel)[0];
+        console.log('canvas loaded', this);
+        return this;
+    };
+
     self.drawShape = function (shape) {
-        document.getElementById(CF.TRANSFORM_ID).appendChild(shape);
+        this.TRANSFORM.appendChild(shape);
     };
 
     self.eraseShape = function (shape) {
         try {
-            document.getElementById(CF.TRANSFORM_ID).removeChild(shape);
+            this.TRANSFORM.removeChild(shape);
         } catch (err) {
         }
     };
 
     self.translate = function (xAdditionalShift, yAdditionalShift) {
-        var transform = document.getElementById(CF.TRANSFORM_ID);
-
         this.currentTranslation.x += xAdditionalShift;
         this.currentTranslation.y += yAdditionalShift;
 
-        transform.setAttribute('transform', 'translate(' + this.currentTranslation.x + ', ' + this.currentTranslation.y + ')');
+        this.TRANSFORM.setAttribute('transform', 'translate(' + this.currentTranslation.x + ', ' + this.currentTranslation.y + ')');
     };
 
     self.resetTranslation = function () {
-        var transform = document.getElementById(CF.TRANSFORM_ID);
-
         this.currentTranslation.x = 0;
         this.currentTranslation.y = 0;
 
-        transform.setAttribute('transform', 'translate(0, 0)');
+        this.TRANSFORM.setAttribute('transform', 'translate(0, 0)');
     };
 
     self.serializeState = function () {
@@ -50,7 +53,7 @@ var Canvas = (function () {
     )();
 
     self.getSvgCanvas = function () {
-        return document.getElementById('svgCanvas');
+        return this.CANVAS;
     };
 
     self.createCircle = function (circleId, centerX, centerY, radius, color) {
@@ -81,8 +84,7 @@ var Canvas = (function () {
         return rectElement;
     };
 
-    return self;
-})();
+    return self.init();
 
-console.log('canvas loaded');
+}(CF.CANVAS_SEL, CF.TRANSFORM_SEL));
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

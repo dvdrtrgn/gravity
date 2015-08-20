@@ -39,13 +39,13 @@
         }
     });
 
-    $('#startButton').click(Grav.start);
-    $('#stopButton').click(Grav.stop);
-    $('#resetButton').click(Grav.reset);
-    $('#traceButton').click(Grav.toggleTraces);
-    $('#clearTraces').click(Grav.clearTraces);
-    $('#save').click(Grav.saveSpaceBodies);
-    $('#restore').click(Grav.restoreFromOutputArea);
+    $('.startButton').click(Grav.start);
+    $('.stopButton').click(Grav.stop);
+    $('.resetButton').click(Grav.reset);
+    $('.traceButton').click(Grav.toggleTraces);
+    $('.clearTraces').click(Grav.clearTraces);
+    $('.save').click(Grav.saveSpaceBodies);
+    $('.restore').click(Grav.restoreFromOutputArea);
 
     Canvas.getSvgCanvas().onmousedown = function (e) {
         Grav.onSvgMouseDown(new MultiBrowserMouseEvent(e));
