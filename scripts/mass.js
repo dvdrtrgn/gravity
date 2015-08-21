@@ -1,7 +1,39 @@
 /* global CN, Canvas, CF */
+var TT = {count: 0, clock: []};
 
 function wrapWithMassProperty(svgElement, mass) {
+    var num = TT.count++;
     var DISTANCE_SCALE_FACTOR = CN.EARTH_MOON_DISTANCE / CN.EARTH_MOON_SCREEN_DISTANCE;
+
+    function intfix(num, max) {
+        max = max || 1e2;
+        num = (num | 0) % max;
+        return (num + max) % max;
+    }
+
+    function logTrace(delay) {
+        if (delay) {
+            window.clearTimeout(TT.clock[num]);
+            TT.clock[num] = window.setTimeout(logTrace, delay);
+            return;
+        }
+        console.log('logTrace', num, TT);
+    }
+
+    function trackTrace(x, y) {
+        x = intfix(x);
+        y = intfix(y);
+        var key = 'xy' + x + '/' + y;
+        // TT.x[x][y] = true; // TT.y[y][x] = true;
+
+        if (TT[key]) {
+            logTrace(999);
+            return false;
+        } else {
+            TT[key] = true;
+            return true;
+        }
+    }
 
     svgElement.toBeRemoved = false;
     svgElement.mass = mass;
@@ -80,10 +112,11 @@ function wrapWithMassProperty(svgElement, mass) {
     svgElement.drawTrace = function () {
         var traceElement, x, y;
 
-        x = this.getX();
-        y = this.getY();
-
         if (++this.traceCounter % 20 === 0) {
+            x = this.getX();
+            y = this.getY();
+            if (!trackTrace(x, y)) return;
+
             traceElement = Canvas.createRectangle('trace_' + nextId(), x, y, 1, 1, this.getAttribute('fill'));
             traceElement.setAttribute('name', 'trace');
         }
