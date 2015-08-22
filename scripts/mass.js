@@ -24,7 +24,6 @@ function wrapWithMassProperty(svgElement, mass) {
         x = intfix(x);
         y = intfix(y);
         var key = 'xy' + x + '/' + y;
-        // TT.x[x][y] = true; // TT.y[y][x] = true;
 
         if (TT[key]) {
             logTrace(999);
