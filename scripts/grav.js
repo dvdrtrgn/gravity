@@ -55,15 +55,15 @@ var Grav = (function (Canvas, CN, CF) {
         for (i = 0; i < shapes.length; i++) {
             me = shapes[i];
 
-            if (me.toBeRemoved) {
+            if (me.Mass.toBeRemoved) {
                 Canvas.eraseShape(me);
                 shapes.splice(i, 1);
             } else {
                 animateShapeFrame(me);
-                me.updatePosition();
+                me.Mass.updatePosition();
 
                 if (tracesActive) {
-                    me.drawTrace();
+                    me.Mass.drawTrace();
                 }
             }
         }
@@ -75,21 +75,21 @@ var Grav = (function (Canvas, CN, CF) {
     function animateShapeFrame(shape) {
         var i, me;
 
-        if (shape.toBeRemoved)
+        if (shape.Mass.toBeRemoved)
             return;
 
         for (i = 0; i < shapes.length; i++) {
             me = shapes[i];
 
             if (me.id !== shape.id) {
-                if (shape.overlaps(me)) {
-                    me.toBeRemoved = true;
-                    shape.mass += me.mass;
-                    shape.vx += me.vx / (shape.mass - me.mass);
-                    shape.vy += me.vy / (shape.mass - me.mass);
+                if (shape.Mass.overlaps(me.Mass)) {
+                    me.Mass.toBeRemoved = true;
+                    shape.Mass.val += me.Mass.val;
+                    shape.Mass.vx += me.Mass.vx / (shape.Mass.val - me.Mass.val);
+                    shape.Mass.vy += me.Mass.vy / (shape.Mass.val - me.Mass.val);
                     continue;
                 }
-                shape.addForce(me);
+                shape.Mass.addForce(me.Mass);
             }
         }
     }
@@ -189,7 +189,7 @@ var Grav = (function (Canvas, CN, CF) {
         bodyIndex = 0;
 
         $(shapes).select('[id*="circle"]').each(function () {
-            spaceBodyInfos.push(new SpaceBodyInfo(this.id, this.mass, this.vx, this.vy));
+            spaceBodyInfos.push(new SpaceBodyInfo(this.id, this.Mass.val, this.Mass.vx, this.Mass.vy));
             bodyIndex++;
         });
 
@@ -200,9 +200,9 @@ var Grav = (function (Canvas, CN, CF) {
 
     function SpaceBodyInfo(id, mass, vx, vy) {
         this.id = id;
-        this.mass = mass;
-        this.vx = vx;
-        this.vy = vy;
+        this.Mass.val = mass;
+        this.Mass.vx = vx;
+        this.Mass.vy = vy;
     }
 
     function restoreFromOutputArea() {
@@ -231,9 +231,9 @@ var Grav = (function (Canvas, CN, CF) {
             var id = this.id;
             var svgShape = document.getElementById(id);
 
-            wrapWithMassProperty(svgShape, this.mass);
-            svgShape.vx = this.vx;
-            svgShape.vy = this.vy;
+            wrapWithMassProperty(svgShape, this.Mass.val);
+            svgShape.Mass.vx = this.Mass.vx;
+            svgShape.Mass.vy = this.Mass.vy;
             shapes.push(svgShape);
         });
     }
