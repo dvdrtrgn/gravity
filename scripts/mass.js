@@ -1,40 +1,9 @@
 /* global CN, Canvas, CF */
-var TT = {count: 0, clock: []};
 
 function wrapWithMassProperty(svgElement, mass) {
     var self = svgElement;
     var Mass = self.Mass = {type: 'Mass'}
-    var num = TT.count++;
     var DISTANCE_SCALE_FACTOR = CN.EARTH_MOON_DISTANCE / CN.EARTH_MOON_SCREEN_DISTANCE;
-
-    function intfix(num, max) {
-        max = max || 1e2;
-        num = (num | 0) % max;
-        return (num + max) % max;
-    }
-
-    function logTrace(delay) {
-        if (delay) {
-            window.clearTimeout(TT.clock[num]);
-            TT.clock[num] = window.setTimeout(logTrace, delay);
-            return;
-        }
-        console.log('logTrace', num, TT);
-    }
-
-    function trackTrace(x, y) {
-        x = intfix(x);
-        y = intfix(y);
-        var key = 'xy' + x + '/' + y;
-
-        if (TT[key]) {
-            logTrace(999);
-            return false;
-        } else {
-            TT[key] = true;
-            return true;
-        }
-    }
 
     Mass.toBeRemoved = false;
     Mass.val = mass;
