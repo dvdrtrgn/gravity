@@ -2,7 +2,7 @@
 /* global Grav, Canvas */
 
 (function Bind() {
-    var TRANSLATION_STEP = 50;
+    var TRANSLATION_STEP = 150;
 
     function up() {
         Canvas.translate(0, TRANSLATION_STEP);
@@ -15,6 +15,10 @@
     }
     function down() {
         Canvas.translate(0, -(TRANSLATION_STEP));
+    }
+    function zoom(num) {
+        var step = TRANSLATION_STEP * -num;
+        Canvas.translate(step, step, num);
     }
     function activate(ele, klass) {
         $(klass).removeClass('active');
@@ -51,7 +55,11 @@
     $('.btn.down').click(down);
 
     $('body').keydown(function (evt) {
-        switch (evt.keyCode) {
+        console.log(evt);
+        var num = evt.keyCode;
+        if (evt.shiftKey) num += 32;
+
+        switch (num) {
             case 38:
                 return up();
             case 37:
@@ -60,6 +68,10 @@
                 return right();
             case 40:
                 return down();
+            case 90:
+                return zoom(-0.1);
+            case 122:
+                return zoom(0.1);
         }
     });
 

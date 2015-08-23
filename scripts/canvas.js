@@ -22,18 +22,21 @@ var Canvas = (function (canvaSel, transSel) {
         }
     };
 
-    self.translate = function (xAdditionalShift, yAdditionalShift) {
-        this.currentTranslation.x += xAdditionalShift;
-        this.currentTranslation.y += yAdditionalShift;
+    self.translate = function (xAdjShift, yAdjShift, adjScale) {
+        var x = this.currentTranslation.x += xAdjShift;
+        var y = this.currentTranslation.y += yAdjShift;
+        var z = (this.currentTranslation.z += (adjScale || 0));
+        var arr = ['translate(', x, ', ', y, ') scale(', z, ')'];
 
-        this.TRANSFORM.setAttribute('transform', 'translate(' + this.currentTranslation.x + ', ' + this.currentTranslation.y + ')');
+        this.TRANSFORM.setAttribute('transform', arr.join(''));
     };
 
     self.resetTranslation = function () {
         this.currentTranslation.x = 0;
         this.currentTranslation.y = 0;
+        this.currentTranslation.z = 1;
 
-        this.TRANSFORM.setAttribute('transform', 'translate(0, 0)');
+        this.TRANSFORM.setAttribute('transform', 'translate(0, 0) scale(1)');
     };
 
     self.serializeState = function () {
@@ -49,6 +52,7 @@ var Canvas = (function (canvaSel, transSel) {
         function CanvasTranslation() {
             this.x = 0;
             this.y = 0;
+            this.z = 1;
         }
     )();
 
