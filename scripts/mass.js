@@ -13,23 +13,20 @@ function wrapWithMassProperty(svgElement, massVal) {
         vx: 0,
         vy: 0,
         traceCounter: 0,
+        getX: function () {
+            return parseFloat(ele.getAttribute('cx'));
+        },
+        getY: function () {
+            return parseFloat(ele.getAttribute('cy'));
+        },
+        getRadius: function () {
+            return parseFloat(ele.getAttribute('r'));
+        },
     };
 
     function isMass(obj) {
         if (obj.type !== 'Mass') throw new Error();
     }
-
-    self._getX = function () {
-        return parseFloat(ele.getAttribute('cx'));
-    };
-
-    self._getY = function () {
-        return parseFloat(ele.getAttribute('cy'));
-    };
-
-    self._getRadius = function () {
-        return parseFloat(ele.getAttribute('r'));
-    };
 
     self._forceBetween = function (mass) {
         isMass(mass);
@@ -45,8 +42,8 @@ function wrapWithMassProperty(svgElement, massVal) {
         isMass(mass);
         var xDiff, yDiff, sqDistance;
 
-        xDiff = (this._getX() - mass._getX()) * Scale;
-        yDiff = (this._getY() - mass._getY()) * Scale;
+        xDiff = (this.getX() - mass.getX()) * Scale;
+        yDiff = (this.getY() - mass.getY()) * Scale;
         sqDistance = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
 
         return sqDistance;
@@ -61,8 +58,8 @@ function wrapWithMassProperty(svgElement, massVal) {
         sqDistance = this._sqDistanceFrom(mass);
         distance = Math.sqrt(sqDistance);
 
-        xDiff = (this._getX() - mass._getX()) * Scale;
-        yDiff = (this._getY() - mass._getY()) * Scale;
+        xDiff = (this.getX() - mass.getX()) * Scale;
+        yDiff = (this.getY() - mass.getY()) * Scale;
         xRatio = xDiff / distance;
         yRatio = yDiff / distance;
         fx = force * xRatio;
@@ -75,8 +72,8 @@ function wrapWithMassProperty(svgElement, massVal) {
     self.updatePosition = function () {
         this.vx = this.vx + this.ax * Interval;
         this.vy = this.vy + this.ay * Interval;
-        ele.setAttribute('cx', this._getX() + (this.vx * Interval));
-        ele.setAttribute('cy', this._getY() + (this.vy * Interval));
+        ele.setAttribute('cx', this.getX() + (this.vx * Interval));
+        ele.setAttribute('cy', this.getY() + (this.vy * Interval));
         this.ax = 0;
         this.ay = 0;
     };
@@ -85,10 +82,11 @@ function wrapWithMassProperty(svgElement, massVal) {
         var track, x, y, fill, id;
 
         if (++this.traceCounter % 20 === 0) {
-            x = this._getX();
-            y = this._getY();
-            if (!trackTrace(x, y)) return;
-
+            x = this.getX();
+            y = this.getY();
+            if (W.trackTrace && !W.trackTrace(x, y)) {
+                return;
+            }
             fill = ele.getAttribute('fill');
             id = 'trace_' + nextId();
 
@@ -102,8 +100,8 @@ function wrapWithMassProperty(svgElement, massVal) {
         var sqDistance, a, b;
 
         sqDistance = this._sqDistanceFrom(mass);
-        a = this._getRadius() * Scale;
-        b = mass._getRadius() * Scale;
+        a = this.getRadius() * Scale;
+        b = mass.getRadius() * Scale;
 
         return sqDistance <= Math.pow(a + b, 2);
     };
