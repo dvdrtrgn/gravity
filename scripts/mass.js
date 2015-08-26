@@ -1,35 +1,35 @@
 /* global CN, Canvas, CF */
 
-function wrapWithMassProperty(svgElement, mass) {
-    var self = svgElement;
-    var Mass = self.Mass = {type: 'Mass'}
+function wrapWithMassProperty(svgElement, massVal) {
+    var ele = svgElement;
+    var self = ele.Mass = {type: 'Mass'}
     var DISTANCE_SCALE_FACTOR = CN.EARTH_MOON_DISTANCE / CN.EARTH_MOON_SCREEN_DISTANCE;
 
-    Mass.toBeRemoved = false;
-    Mass.val = mass;
-    Mass.ax = 0;
-    Mass.ay = 0;
-    Mass.vx = 0;
-    Mass.vy = 0;
-    Mass.traceCounter = 0;
+    self.toBeRemoved = false;
+    self.val = massVal;
+    self.ax = 0;
+    self.ay = 0;
+    self.vx = 0;
+    self.vy = 0;
+    self.traceCounter = 0;
 
     function checkMass(obj) {
         if (obj.type !== 'Mass') throw new Error();
     }
 
-    Mass._getX = function () {
-        return parseFloat(self.getAttribute('cx'));
+    self._getX = function () {
+        return parseFloat(ele.getAttribute('cx'));
     };
 
-    Mass._getY = function () {
-        return parseFloat(self.getAttribute('cy'));
+    self._getY = function () {
+        return parseFloat(ele.getAttribute('cy'));
     };
 
-    Mass._getRadius = function () {
-        return parseFloat(self.getAttribute('r'));
+    self._getRadius = function () {
+        return parseFloat(ele.getAttribute('r'));
     };
 
-    Mass._forceBetween = function (massiveObject) {
+    self._forceBetween = function (massiveObject) {
         checkMass(massiveObject);
         var squareDistance, force;
 
@@ -39,7 +39,7 @@ function wrapWithMassProperty(svgElement, mass) {
         return -1 * force;
     };
 
-    Mass._squareDistanceFrom = function (svgShape) {
+    self._squareDistanceFrom = function (svgShape) {
         checkMass(svgShape);
         var xDiff, yDiff, squareDistance;
 
@@ -50,7 +50,7 @@ function wrapWithMassProperty(svgElement, mass) {
         return squareDistance;
     };
 
-    Mass.addForce = function (massiveObject) {
+    self.addForce = function (massiveObject) {
         checkMass(massiveObject);
         var forceMagnitude, squareDistance, distance,
             xDiff, yDiff, xRatio, yRatio, fx, fy;
@@ -70,7 +70,7 @@ function wrapWithMassProperty(svgElement, mass) {
         this.ay = this.ay + fy / this.val;
     };
 
-    Mass.updatePosition = function () {
+    self.updatePosition = function () {
         var nextX, nextY;
 
         this.vx = this.vx + this.ax * CF.STEP_INTERVAL;
@@ -79,14 +79,14 @@ function wrapWithMassProperty(svgElement, mass) {
         nextX = this._getX() + (this.vx * CF.STEP_INTERVAL);
         nextY = this._getY() + (this.vy * CF.STEP_INTERVAL);
 
-        self.setAttribute('cx', nextX);
-        self.setAttribute('cy', nextY);
+        ele.setAttribute('cx', nextX);
+        ele.setAttribute('cy', nextY);
 
         this.ax = 0;
         this.ay = 0;
     };
 
-    Mass.drawTrace = function () {
+    self.drawTrace = function () {
         var traceElement, x, y;
 
         if (++this.traceCounter % 20 === 0) {
@@ -94,12 +94,12 @@ function wrapWithMassProperty(svgElement, mass) {
             y = this._getY();
             if (!trackTrace(x, y)) return;
 
-            traceElement = Canvas.createRectangle('trace_' + nextId(), x, y, 1, 1, self.getAttribute('fill'));
+            traceElement = Canvas.createRectangle('trace_' + nextId(), x, y, 1, 1, ele.getAttribute('fill'));
             traceElement.setAttribute('name', 'trace');
         }
     };
 
-    Mass.overlaps = function (massiveObject) {
+    self.overlaps = function (massiveObject) {
         checkMass(massiveObject);
         var squareDistance, a, b;
 
