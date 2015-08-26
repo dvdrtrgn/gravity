@@ -1,12 +1,13 @@
 /* global CF */
 
-var Canvas = (function (canvasSel, transSel) {
+var Canvas = (function (CF) {
     var self = {};
     var xmlhead = 'http://www.w3.org/2000/svg';
 
     self.init = function () {
-        this.canvasEle = $(canvasSel)[0];
-        this.transEle = $(transSel)[0];
+        this.canvasEle = $(CF.CANVAS_SEL)[0];
+        this.transEle = document.createElementNS(xmlhead, 'g');
+        this.canvasEle.appendChild(this.transEle);
 
         console.log('canvas inited', this);
         return this;
@@ -84,7 +85,6 @@ var Canvas = (function (canvasSel, transSel) {
         return ele;
     };
 
-
     self.createRectangle = function (id, x, y, width, height, fill) {
         var ele = document.createElementNS(xmlhead, 'rect');
 
@@ -103,5 +103,5 @@ var Canvas = (function (canvasSel, transSel) {
 
     return self.init();
 
-}(CF.CANVAS_SEL, CF.TRANSFORM_SEL));
+}(CF));
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

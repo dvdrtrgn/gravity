@@ -1,8 +1,7 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 var CF = {
     STEP_INTERVAL: 0.41, // 0.041 for 24 frames per seconds
-    TRANSFORM_SEL: '.canvasTranslation',
-    CANVAS_SEL: '.svgCanvas',
+    CANVAS_SEL: 'svg.canvas',
 };
 
 var CN = {
