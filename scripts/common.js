@@ -2,6 +2,10 @@
 var CF = {
     STEP_INTERVAL: 0.41, // 0.041 for 24 frames per seconds
     CANVAS_SEL: 'svg.canvas',
+    _counter: 0,
+    nextId: function () {
+        return this._counter++;
+    },
 };
 
 var CN = {
@@ -12,14 +16,6 @@ var CN = {
     EARTH_MOON_DISTANCE: 384400000, //384,400 Km
     EARTH_MOON_SCREEN_DISTANCE: 50,
 };
-
-var traceCounter = 0;
-var idCounter = 0;
-
-function nextId() {
-    idCounter++;
-    return idCounter;
-}
 
 function MultiBrowserMouseEvent(innerEvent) {
     /* global Canvas */

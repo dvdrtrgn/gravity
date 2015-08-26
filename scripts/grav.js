@@ -1,6 +1,6 @@
-/* global Canvas, CN, CF */
+/* global jQuery, Canvas, CN, CF */
 
-var Grav = (function (Canvas, CN, CF) {
+var Grav = (function ($, Canvas, CN, CF) {
     var self;
 
     var SAVE_OUT_AREA_SEL = '.saveOutputArea';
@@ -13,23 +13,23 @@ var Grav = (function (Canvas, CN, CF) {
     var selectedMass = CN.EARTH_MASS;
     var shapes = [];
     var tracesActive = true;
+    var C = window.console;
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     function initSvg() {
         self.SAVE_OUT_AREA = $(SAVE_OUT_AREA_SEL);
         self.RESTORE = $(RESTORE_SEL);
 
-        console.log('grav inited', self);
+        C.log('grav inited', self);
         start();
         return self;
     }
 
     function start() {
-        if (running)
-            return;
-
-        running = true;
-        gameLoop(); // animateFrame();
+        if (!running) {
+            running = true;
+            gameLoop(); // animateFrame();
+        }
     }
 
     function stop() {
@@ -40,7 +40,7 @@ var Grav = (function (Canvas, CN, CF) {
         $(shapes).each(function () {
             Canvas.eraseShape(this);
         });
-        shapes = new Array();
+        shapes = [];
     }
 
     function clearTraces() {
@@ -75,9 +75,9 @@ var Grav = (function (Canvas, CN, CF) {
     function animateShapeFrame(shape) {
         var i, me;
 
-        if (shape.Mass.toBeRemoved)
+        if (shape.Mass.toBeRemoved) {
             return;
-
+        }
         for (i = 0; i < shapes.length; i++) {
             me = shapes[i];
 
@@ -87,9 +87,9 @@ var Grav = (function (Canvas, CN, CF) {
                     shape.Mass.val += me.Mass.val;
                     shape.Mass.vx += me.Mass.vx / (shape.Mass.val - me.Mass.val);
                     shape.Mass.vy += me.Mass.vy / (shape.Mass.val - me.Mass.val);
-                    continue;
+                } else {
+                    shape.Mass.addForce(me.Mass);
                 }
-                shape.Mass.addForce(me.Mass);
             }
         }
     }
@@ -110,7 +110,7 @@ var Grav = (function (Canvas, CN, CF) {
 
         x = mouseEvent.getX();
         y = mouseEvent.getY();
-        circle = createCircle('circle_' + nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
+        circle = createCircle('circle_' + CF.nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
 
 
         Canvas.getSvgCanvas().onmousemove = function (event) {
@@ -155,7 +155,7 @@ var Grav = (function (Canvas, CN, CF) {
         Canvas.getSvgCanvas().onmousemove = function (e) {
             // huh
         };
-        console.log('END');
+        C.log('END');
     }
 
     function setMoonMode() {
@@ -206,9 +206,7 @@ var Grav = (function (Canvas, CN, CF) {
     }
 
     function restoreFromOutputArea() {
-        var text = self.SAVE_OUT_AREA.val();
-
-        restoreState(text);
+        restoreState(self.SAVE_OUT_AREA.val());
     }
 
     function restoreState(serializedAppState) {
@@ -255,7 +253,7 @@ var Grav = (function (Canvas, CN, CF) {
 
     return self.init();
 
-}(Canvas, CN, CF));
+}($, Canvas, CN, CF));
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /*

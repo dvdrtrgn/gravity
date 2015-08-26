@@ -1,9 +1,10 @@
-/* global CN, Canvas, CF */
+/*global CN, Canvas, CF */
 
 function wrapWithMassProperty(svgElement, massVal) {
     var ele = svgElement;
     var Scale = CN.EARTH_MOON_DISTANCE / CN.EARTH_MOON_SCREEN_DISTANCE;
     var Interval = CF.STEP_INTERVAL;
+    var W = window;
     var self = {
         type: 'Mass',
         toBeRemoved: false,
@@ -88,7 +89,7 @@ function wrapWithMassProperty(svgElement, massVal) {
                 return;
             }
             fill = ele.getAttribute('fill');
-            id = 'trace_' + nextId();
+            id = 'trace_' + CF.nextId();
 
             track = Canvas.createRectangle(id, x, y, 1, 1, fill);
             track.setAttribute('name', 'trace');
@@ -106,8 +107,8 @@ function wrapWithMassProperty(svgElement, massVal) {
         return sqDistance <= Math.pow(a + b, 2);
     };
 
-    return ele.Mass = self;
+    return (ele.Mass = self);
 }
 
-console.log('mass loaded');
+window.console.log('mass loaded');
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
