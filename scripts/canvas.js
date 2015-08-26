@@ -1,73 +1,58 @@
-/* global CF */
+/*global jQuery, CF */
 
-var Canvas = (function (CF) {
-    var self = {};
+var Canvas = (function ($, svgSel) {
+    var _, self = {}, C = window.console;
     var xmlhead = 'http://www.w3.org/2000/svg';
+    var canvasEle, transEle, transObj;
 
-    self.init = function () {
-        this.canvasEle = $(CF.CANVAS_SEL)[0];
-        this.transEle = document.createElementNS(xmlhead, 'g');
-        this.canvasEle.appendChild(this.transEle);
-
-        console.log('canvas inited', this);
-        return this;
-    };
+    function CanvasTranslation() {
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;
+    }
 
     self.drawShape = function (shape) {
-        this.transEle.appendChild(shape);
+        transEle.appendChild(shape);
     };
 
     self.eraseShape = function (shape) {
         try {
-            this.transEle.removeChild(shape);
+            transEle.removeChild(shape);
         } catch (err) {
         }
     };
 
     self.translate = function (xAdjShift, yAdjShift, adjScale) {
-        var x = this._trans.x += xAdjShift;
-        var y = this._trans.y += yAdjShift;
-        var z = (this._trans.z += (adjScale || 0));
-        var arr = ['translate(', x, ', ', y, ') scale(', z, ')'];
+        var arr, x, y, z;
 
-        this.transEle.setAttribute('transform', arr.join(''));
+        x = transObj.x += xAdjShift;
+        y = transObj.y += yAdjShift;
+        z = transObj.z += (adjScale || 0);
+        arr = ['translate(', x, ', ', y, ') scale(', z, ')'];
+
+        transEle.setAttribute('transform', arr.join(''));
     };
 
     self.getTranslation = function () {
         return {
-            x: self._trans.x,
-            y: self._trans.y,
-            z: self._trans.z,
+            x: transObj.x,
+            y: transObj.y,
+            z: transObj.z,
         };
     };
 
     self.resetTranslation = function () {
-        this._trans.x = 0;
-        this._trans.y = 0;
-        this._trans.z = 1;
-
-        this.transEle.setAttribute('transform', 'translate(0, 0) scale(1)');
+        transEle.setAttribute('transform', 'translate(0, 0) scale(1)');
+        return (transObj = new CanvasTranslation());
     };
 
     self.serializeState = function () {
-        var canvas = this.getSvgCanvas();
-
-        canvas = $(canvas);
-        $(canvas).find('[name="trace"]').remove();
-
-        return canvas.get(0).outerHTML;
+        $(canvasEle).find('[name="trace"]').remove();
+        return canvasEle.outerHTML;
     };
 
-    self._trans = new (
-        function CanvasTranslation() {
-            this.x = 0;
-            this.y = 0;
-            this.z = 1;
-        }
-    )();
-
     self.getSvgCanvas = function () {
-        return this.canvasEle;
+        return canvasEle;
     };
 
     self.createCircle = function (id, cx, cy, radius, fill) {
@@ -80,7 +65,6 @@ var Canvas = (function (CF) {
             cx: cx,
             cy: cy,
         });
-
         this.drawShape(ele);
         return ele;
     };
@@ -96,12 +80,20 @@ var Canvas = (function (CF) {
             y: y,
             width: width,
         });
-
         this.drawShape(ele);
         return ele;
     };
 
-    return self.init();
-
-}(CF));
+    function init() {
+        _ = self._ = {
+            canvasEle: canvasEle = $(svgSel)[0],
+            transEle: transEle = document.createElementNS(xmlhead, 'g'),
+            transObj: self.resetTranslation(),
+        };
+        canvasEle.appendChild(transEle);
+        C.log('Canvas inited', self);
+        return self;
+    };
+    return init();
+}(jQuery, CF.CANVAS_SEL));
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
