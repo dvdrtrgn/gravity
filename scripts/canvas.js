@@ -2,6 +2,7 @@
 
 var Canvas = (function (canvasSel, transSel) {
     var self = {};
+    var xmlhead = 'http://www.w3.org/2000/svg';
 
     self.init = function () {
         this.canvasEle = $(canvasSel)[0];
@@ -23,18 +24,26 @@ var Canvas = (function (canvasSel, transSel) {
     };
 
     self.translate = function (xAdjShift, yAdjShift, adjScale) {
-        var x = this.currentTranslation.x += xAdjShift;
-        var y = this.currentTranslation.y += yAdjShift;
-        var z = (this.currentTranslation.z += (adjScale || 0));
+        var x = this._trans.x += xAdjShift;
+        var y = this._trans.y += yAdjShift;
+        var z = (this._trans.z += (adjScale || 0));
         var arr = ['translate(', x, ', ', y, ') scale(', z, ')'];
 
         this.transEle.setAttribute('transform', arr.join(''));
     };
 
+    self.getTranslation = function () {
+        return {
+            x: self._trans.x,
+            y: self._trans.y,
+            z: self._trans.z,
+        };
+    };
+
     self.resetTranslation = function () {
-        this.currentTranslation.x = 0;
-        this.currentTranslation.y = 0;
-        this.currentTranslation.z = 1;
+        this._trans.x = 0;
+        this._trans.y = 0;
+        this._trans.z = 1;
 
         this.transEle.setAttribute('transform', 'translate(0, 0) scale(1)');
     };
@@ -48,7 +57,7 @@ var Canvas = (function (canvasSel, transSel) {
         return canvas.get(0).outerHTML;
     };
 
-    self.currentTranslation = new (
+    self._trans = new (
         function CanvasTranslation() {
             this.x = 0;
             this.y = 0;
@@ -61,7 +70,7 @@ var Canvas = (function (canvasSel, transSel) {
     };
 
     self.createCircle = function (id, cx, cy, radius, fill) {
-        var ele = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        var ele = document.createElementNS(xmlhead, 'circle');
 
         $(ele).attr({
             fill: fill,
@@ -77,7 +86,7 @@ var Canvas = (function (canvasSel, transSel) {
 
 
     self.createRectangle = function (id, x, y, width, height, fill) {
-        var ele = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        var ele = document.createElementNS(xmlhead, 'rect');
 
         $(ele).attr({
             fill: fill,

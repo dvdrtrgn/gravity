@@ -106,7 +106,7 @@ var Grav = (function (Canvas, CN, CF) {
     function onSvgMouseDown(mouseEvent) {
         var x, y, circle, canvas;
 
-        mouseEvent.translate(Canvas.currentTranslation);
+        mouseEvent.translate(Canvas.getTranslation());
 
         x = mouseEvent.getX();
         y = mouseEvent.getY();
@@ -134,7 +134,7 @@ var Grav = (function (Canvas, CN, CF) {
     }
 
     function drawSpeedVector(mouseEvent) {
-        mouseEvent.translate(Canvas.currentTranslation);
+        mouseEvent.translate(Canvas.getTranslation());
         lastVectorLine.setAttribute('x2', mouseEvent.getX());
         lastVectorLine.setAttribute('y2', mouseEvent.getY());
     }
