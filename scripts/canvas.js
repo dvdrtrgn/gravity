@@ -60,32 +60,36 @@ var Canvas = (function (canvaSel, transSel) {
         return this.CANVAS;
     };
 
-    self.createCircle = function (circleId, centerX, centerY, radius, color) {
-        var element = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    self.createCircle = function (id, cx, cy, radius, fill) {
+        var ele = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
-        element.setAttribute('id', circleId);
-        element.setAttribute('cx', centerX);
-        element.setAttribute('cy', centerY);
-        element.setAttribute('r', radius);
-        element.setAttribute('fill', color);
+        $(ele).attr({
+            fill: fill,
+            id: id,
+            r: radius,
+            cx: cx,
+            cy: cy,
+        });
 
-        this.drawShape(element);
-        return element;
+        this.drawShape(ele);
+        return ele;
     };
 
 
     self.createRectangle = function (id, x, y, width, height, fill) {
-        var rectElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        var ele = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 
-        rectElement.setAttribute('x', x);
-        rectElement.setAttribute('y', y);
-        rectElement.setAttribute('width', width);
-        rectElement.setAttribute('height', height);
-        rectElement.setAttribute('fill', fill);
-        rectElement.setAttribute('id', id);
+        $(ele).attr({
+            fill: fill,
+            height: height,
+            id: id,
+            x: x,
+            y: y,
+            width: width,
+        });
 
-        this.drawShape(rectElement);
-        return rectElement;
+        this.drawShape(ele);
+        return ele;
     };
 
     return self.init();
