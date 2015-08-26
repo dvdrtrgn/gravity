@@ -1,23 +1,23 @@
 /* global CF */
 
-var Canvas = (function (canvaSel, transSel) {
+var Canvas = (function (canvasSel, transSel) {
     var self = {};
 
     self.init = function () {
-        this.CANVAS = $(canvaSel)[0];
-        this.TRANSFORM = $(transSel)[0];
+        this.canvasEle = $(canvasSel)[0];
+        this.transEle = $(transSel)[0];
 
         console.log('canvas inited', this);
         return this;
     };
 
     self.drawShape = function (shape) {
-        this.TRANSFORM.appendChild(shape);
+        this.transEle.appendChild(shape);
     };
 
     self.eraseShape = function (shape) {
         try {
-            this.TRANSFORM.removeChild(shape);
+            this.transEle.removeChild(shape);
         } catch (err) {
         }
     };
@@ -28,7 +28,7 @@ var Canvas = (function (canvaSel, transSel) {
         var z = (this.currentTranslation.z += (adjScale || 0));
         var arr = ['translate(', x, ', ', y, ') scale(', z, ')'];
 
-        this.TRANSFORM.setAttribute('transform', arr.join(''));
+        this.transEle.setAttribute('transform', arr.join(''));
     };
 
     self.resetTranslation = function () {
@@ -36,7 +36,7 @@ var Canvas = (function (canvaSel, transSel) {
         this.currentTranslation.y = 0;
         this.currentTranslation.z = 1;
 
-        this.TRANSFORM.setAttribute('transform', 'translate(0, 0) scale(1)');
+        this.transEle.setAttribute('transform', 'translate(0, 0) scale(1)');
     };
 
     self.serializeState = function () {
@@ -57,7 +57,7 @@ var Canvas = (function (canvaSel, transSel) {
     )();
 
     self.getSvgCanvas = function () {
-        return this.CANVAS;
+        return this.canvasEle;
     };
 
     self.createCircle = function (id, cx, cy, radius, fill) {
