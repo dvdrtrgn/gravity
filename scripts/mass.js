@@ -2,18 +2,20 @@
 
 function wrapWithMassProperty(svgElement, massVal) {
     var ele = svgElement;
-    var self = ele.Mass = {type: 'Mass'}
-    var DISTANCE_SCALE_FACTOR = CN.EARTH_MOON_DISTANCE / CN.EARTH_MOON_SCREEN_DISTANCE;
+    var Scale = CN.EARTH_MOON_DISTANCE / CN.EARTH_MOON_SCREEN_DISTANCE;
+    var Interval = CF.STEP_INTERVAL;
+    var self = {
+        type: 'Mass',
+        toBeRemoved: false,
+        val: massVal,
+        ax: 0,
+        ay: 0,
+        vx: 0,
+        vy: 0,
+        traceCounter: 0,
+    };
 
-    self.toBeRemoved = false;
-    self.val = massVal;
-    self.ax = 0;
-    self.ay = 0;
-    self.vx = 0;
-    self.vy = 0;
-    self.traceCounter = 0;
-
-    function checkMass(obj) {
+    function isMass(obj) {
         if (obj.type !== 'Mass') throw new Error();
     }
 
@@ -29,86 +31,84 @@ function wrapWithMassProperty(svgElement, massVal) {
         return parseFloat(ele.getAttribute('r'));
     };
 
-    self._forceBetween = function (massiveObject) {
-        checkMass(massiveObject);
-        var squareDistance, force;
+    self._forceBetween = function (mass) {
+        isMass(mass);
+        var sqDistance, force;
 
-        squareDistance = this._squareDistanceFrom(massiveObject);
-        force = CN.G * (this.val * massiveObject.val) / squareDistance;
+        sqDistance = this._sqDistanceFrom(mass);
+        force = CN.G * (this.val * mass.val) / sqDistance;
 
         return -1 * force;
     };
 
-    self._squareDistanceFrom = function (svgShape) {
-        checkMass(svgShape);
-        var xDiff, yDiff, squareDistance;
+    self._sqDistanceFrom = function (mass) {
+        isMass(mass);
+        var xDiff, yDiff, sqDistance;
 
-        xDiff = (this._getX() - svgShape._getX()) * DISTANCE_SCALE_FACTOR;
-        yDiff = (this._getY() - svgShape._getY()) * DISTANCE_SCALE_FACTOR;
-        squareDistance = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
+        xDiff = (this._getX() - mass._getX()) * Scale;
+        yDiff = (this._getY() - mass._getY()) * Scale;
+        sqDistance = Math.pow(xDiff, 2) + Math.pow(yDiff, 2);
 
-        return squareDistance;
+        return sqDistance;
     };
 
-    self.addForce = function (massiveObject) {
-        checkMass(massiveObject);
-        var forceMagnitude, squareDistance, distance,
+    self.addForce = function (mass) {
+        isMass(mass);
+        var force, sqDistance, distance,
             xDiff, yDiff, xRatio, yRatio, fx, fy;
 
-        forceMagnitude = this._forceBetween(massiveObject);
-        squareDistance = this._squareDistanceFrom(massiveObject);
-        distance = Math.sqrt(squareDistance);
+        force = this._forceBetween(mass);
+        sqDistance = this._sqDistanceFrom(mass);
+        distance = Math.sqrt(sqDistance);
 
-        xDiff = (this._getX() - massiveObject._getX()) * DISTANCE_SCALE_FACTOR;
-        yDiff = (this._getY() - massiveObject._getY()) * DISTANCE_SCALE_FACTOR;
+        xDiff = (this._getX() - mass._getX()) * Scale;
+        yDiff = (this._getY() - mass._getY()) * Scale;
         xRatio = xDiff / distance;
         yRatio = yDiff / distance;
-        fx = forceMagnitude * xRatio;
-        fy = forceMagnitude * yRatio;
+        fx = force * xRatio;
+        fy = force * yRatio;
 
         this.ax = this.ax + fx / this.val;
         this.ay = this.ay + fy / this.val;
     };
 
     self.updatePosition = function () {
-        var nextX, nextY;
-
-        this.vx = this.vx + this.ax * CF.STEP_INTERVAL;
-        this.vy = this.vy + this.ay * CF.STEP_INTERVAL;
-
-        nextX = this._getX() + (this.vx * CF.STEP_INTERVAL);
-        nextY = this._getY() + (this.vy * CF.STEP_INTERVAL);
-
-        ele.setAttribute('cx', nextX);
-        ele.setAttribute('cy', nextY);
-
+        this.vx = this.vx + this.ax * Interval;
+        this.vy = this.vy + this.ay * Interval;
+        ele.setAttribute('cx', this._getX() + (this.vx * Interval));
+        ele.setAttribute('cy', this._getY() + (this.vy * Interval));
         this.ax = 0;
         this.ay = 0;
     };
 
     self.drawTrace = function () {
-        var traceElement, x, y;
+        var track, x, y, fill, id;
 
         if (++this.traceCounter % 20 === 0) {
             x = this._getX();
             y = this._getY();
             if (!trackTrace(x, y)) return;
 
-            traceElement = Canvas.createRectangle('trace_' + nextId(), x, y, 1, 1, ele.getAttribute('fill'));
-            traceElement.setAttribute('name', 'trace');
+            fill = ele.getAttribute('fill');
+            id = 'trace_' + nextId();
+
+            track = Canvas.createRectangle(id, x, y, 1, 1, fill);
+            track.setAttribute('name', 'trace');
         }
     };
 
-    self.overlaps = function (massiveObject) {
-        checkMass(massiveObject);
-        var squareDistance, a, b;
+    self.overlaps = function (mass) {
+        isMass(mass);
+        var sqDistance, a, b;
 
-        squareDistance = this._squareDistanceFrom(massiveObject);
-        a = this._getRadius() * DISTANCE_SCALE_FACTOR;
-        b = massiveObject._getRadius() * DISTANCE_SCALE_FACTOR;
+        sqDistance = this._sqDistanceFrom(mass);
+        a = this._getRadius() * Scale;
+        b = mass._getRadius() * Scale;
 
-        return squareDistance <= Math.pow(a + b, 2);
+        return sqDistance <= Math.pow(a + b, 2);
     };
+
+    return ele.Mass = self;
 }
 
 console.log('mass loaded');
