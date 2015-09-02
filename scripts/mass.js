@@ -1,4 +1,7 @@
-/*global CN, Canvas, CF */
+/*global console, define, CF */
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+define(['canvas', 'common'], function (Canvas, CN) {
+    'use strict';
 
 function wrapWithMassProperty(svgElement, massVal) {
     var ele = svgElement;
@@ -22,11 +25,13 @@ function wrapWithMassProperty(svgElement, massVal) {
         },
         getRadius: function () {
             return parseFloat(ele.getAttribute('r'));
-        },
+        }
     };
 
     function isMass(obj) {
-        if (obj.type !== 'Mass') throw new Error();
+        if (obj.type !== 'Mass') {
+            throw new Error();
+        }
     }
 
     self._forceBetween = function (mass) {
@@ -111,4 +116,6 @@ function wrapWithMassProperty(svgElement, massVal) {
 }
 
 window.console.log('mass loaded');
+    return wrapWithMassProperty;
+});
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

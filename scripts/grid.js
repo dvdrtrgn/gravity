@@ -1,31 +1,36 @@
-/* global */
+/*global console, define*/
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+define([], function () {
 
 var GG = (function () {
 
-    function Grid(x, y) {
-        this.cols = x || new Vector();
-        this.rows = y || new Vector();
-    }
     function Point() {
         this.name = this.toString();
     }
     function Vector(nom) {
         var v = [];
-        nom && (v.name = nom);
+        if (nom) {
+            v.name = nom;
+        }
         return v;
+    }
+    function Grid(x, y) {
+        this.cols = x || new Vector();
+        this.rows = y || new Vector();
     }
 
     Grid.prototype.checkXY = function (x, y) {
-        var p, p1, col, row;
+        var pnt, col, row;
 
         col = this.getCol(x);
-        row = this.getRow(y);
-        p1 = col[y] || (p = this.makePoint(x, y));
+        pnt = col[y];
 
-        if (p === p1) {
-            col[y] = row[x] = p; // indexed by x AND y
+        if (!pnt) {
+            row = this.getRow(y);
+            col[y] = row[x] = this.makePoint(x, y); // indexed by x AND y
             return false;
-        } else return p1;
+        }
+        return pnt;
     };
     Grid.prototype.getCol = function (n) {
         return this.cols[n] || (this.cols[n] = new Vector('col' + n));
@@ -48,6 +53,8 @@ var GG = (function () {
 }());
 
 console.log('grid loaded');
+    return GG;
+});
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 //  |....A| x4.y0

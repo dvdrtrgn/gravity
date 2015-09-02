@@ -1,29 +1,36 @@
+/*global console, define*/
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-/* global Grav, Canvas */
+define(['jquery', 'canvas', 'common', 'src/grav'], function ($, Canvas, CN, Grav) {
+    'use strict';
 
-(function Bind() {
     var TRANSLATION_STEP = 150;
 
     function up() {
         Canvas.translate(0, TRANSLATION_STEP);
     }
+
     function left() {
         Canvas.translate(TRANSLATION_STEP, 0);
     }
+
     function right() {
         Canvas.translate(-(TRANSLATION_STEP), 0);
     }
+
     function down() {
-        Canvas.translate(0, -(TRANSLATION_STEP));
+        Canvas.translate(0, - (TRANSLATION_STEP));
     }
+
     function zoom(num) {
-        var step = TRANSLATION_STEP * -num;
+        var step = TRANSLATION_STEP * - num;
         Canvas.translate(step, step, num);
     }
+
     function activate(ele, klass) {
         $(klass).removeClass('active');
         $(ele).addClass('active');
     }
+
     function toggle(ele, klass) {
         var me = $(ele);
 
@@ -55,10 +62,12 @@
     $('.btn.down').click(down);
 
     $('body').keydown(function (evt) {
-        console.log(evt);
         var num = evt.keyCode;
-        if (evt.shiftKey) num += 32;
+        console.log(evt);
 
+        if (evt.shiftKey) {
+            num += 32;
+        }
         switch (num) {
             case 38:
                 return up();
@@ -72,11 +81,16 @@
                 return zoom(-0.1);
             case 122:
                 return zoom(0.1);
+            }
         }
-    });
+    );
 
     $('.start.btn').click(function () {
-        toggle(this, 'active') ? Grav.start() : Grav.stop();
+        if (toggle(this, 'active')) {
+            Grav.start();
+        } else {
+            Grav.stop();
+        }
     });
 
     $('.trace.btn').click(function () {
@@ -90,9 +104,9 @@
     $('.reset.btn').click(Grav.reset);
 
     Canvas.getSvgCanvas().onmousedown = function (e) {
-        Grav.onSvgMouseDown(new MultiBrowserMouseEvent(e));
+        Grav.onSvgMouseDown(new CN.MultiBrowserMouseEvent(e));
     };
 
     console.log('bindings loaded');
-}());
+});
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
