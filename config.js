@@ -14,10 +14,10 @@ W.CF = {
 };
 
 require.config({
-    baseUrl: 'scripts',
+    baseUrl: 'scripts/libs',
     paths: {
-        src: '.',
-        test: '.',
+        src: '..',
+        test: '../test',
         jquery: '/lib/jquery/1.8.2/jquery',
         uscore: '/lib/underscore/js-1.4.4/lodash.underscore'
     }
