@@ -1,4 +1,5 @@
-/* global */
+/*global console */
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 var trackTrace = (function () {
     var TT = {count: 0, clock: []};

@@ -1,8 +1,9 @@
-/* global jQuery, Canvas, CN, CF */
+/*global console, define, CF */
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+define(['jquery', 'canvas', 'mass', 'common'], function ($, Canvas, wrapWithMassProperty, CN) {
+    'use strict';
 
-var Grav = (function ($, Canvas, CN, CF) {
-    var self;
-
+    var self, lastVectorLine;
     var SAVE_OUT_AREA_SEL = '.saveOutputArea';
     var RESTORE_SEL = '#Restore';
     var SPEED_SCALE_FACTOR = 1 / 200;
@@ -13,40 +14,28 @@ var Grav = (function ($, Canvas, CN, CF) {
     var selectedMass = CN.EARTH_MASS;
     var shapes = [];
     var tracesActive = true;
-    var C = window.console;
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-    function initSvg() {
-        self.SAVE_OUT_AREA = $(SAVE_OUT_AREA_SEL);
-        self.RESTORE = $(RESTORE_SEL);
+    function animateShapeFrame(shape) {
+        var i, me;
 
-        C.log('grav inited', self);
-        start();
-        return self;
-    }
-
-    function start() {
-        if (!running) {
-            running = true;
-            gameLoop(); // animateFrame();
+        if (shape.Mass.toBeRemoved) {
+            return;
         }
-    }
+        for (i = 0; i < shapes.length; i++) {
+            me = shapes[i];
 
-    function stop() {
-        running = false;
-    }
-
-    function reset() {
-        $(shapes).each(function () {
-            Canvas.eraseShape(this);
-        });
-        shapes = [];
-    }
-
-    function clearTraces() {
-        $('[name="trace"]').each(function () {
-            Canvas.eraseShape(this);
-        });
+            if (me.id !== shape.id) {
+                if (shape.Mass.overlaps(me.Mass)) {
+                    me.Mass.toBeRemoved = true;
+                    shape.Mass.val += me.Mass.val;
+                    shape.Mass.vx += me.Mass.vx / (shape.Mass.val - me.Mass.val);
+                    shape.Mass.vy += me.Mass.vy / (shape.Mass.val - me.Mass.val);
+                } else {
+                    shape.Mass.addForce(me.Mass);
+                }
+            }
+        }
     }
 
     function gameLoop() {
@@ -72,26 +61,34 @@ var Grav = (function ($, Canvas, CN, CF) {
         }
     }
 
-    function animateShapeFrame(shape) {
-        var i, me;
-
-        if (shape.Mass.toBeRemoved) {
-            return;
+    function start() {
+        if (!running) {
+            running = true;
+            gameLoop(); // animateFrame();
         }
-        for (i = 0; i < shapes.length; i++) {
-            me = shapes[i];
+    }
 
-            if (me.id !== shape.id) {
-                if (shape.Mass.overlaps(me.Mass)) {
-                    me.Mass.toBeRemoved = true;
-                    shape.Mass.val += me.Mass.val;
-                    shape.Mass.vx += me.Mass.vx / (shape.Mass.val - me.Mass.val);
-                    shape.Mass.vy += me.Mass.vy / (shape.Mass.val - me.Mass.val);
-                } else {
-                    shape.Mass.addForce(me.Mass);
-                }
-            }
-        }
+    function stop() {
+        running = false;
+    }
+
+    function initSvg() {
+        self.SAVE_OUT_AREA = $(SAVE_OUT_AREA_SEL);
+        self.RESTORE = $(RESTORE_SEL);
+        start();
+    }
+
+    function reset() {
+        $(shapes).each(function () {
+            Canvas.eraseShape(this);
+        });
+        shapes = [];
+    }
+
+    function clearTraces() {
+        $('[name="trace"]').each(function () {
+            Canvas.eraseShape(this);
+        });
     }
 
     function createCircle(circleId, centerX, centerY, radius, color) {
@@ -101,36 +98,6 @@ var Grav = (function ($, Canvas, CN, CF) {
         Canvas.drawShape(element);
 
         return element;
-    }
-
-    function onSvgMouseDown(mouseEvent) {
-        var x, y, circle, canvas;
-
-        mouseEvent.translate(Canvas.getTranslation());
-
-        x = mouseEvent.getX();
-        y = mouseEvent.getY();
-        circle = createCircle('circle_' + CF.nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
-
-
-        Canvas.getSvgCanvas().onmousemove = function (event) {
-            drawSpeedVector(new MultiBrowserMouseEvent(event));
-        };
-
-        // creates a line
-        lastVectorLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        lastVectorLine.setAttribute('x1', mouseEvent.getX());
-        lastVectorLine.setAttribute('y1', mouseEvent.getY());
-        lastVectorLine.setAttribute('x2', mouseEvent.getX());
-        lastVectorLine.setAttribute('y2', mouseEvent.getY());
-        lastVectorLine.setAttribute('style', 'stroke:rgb(255,0,0);stroke-width:1');
-        Canvas.drawShape(lastVectorLine);
-        //
-        canvas = Canvas.getSvgCanvas();
-        canvas.onmouseleave = //
-            canvas.onmouseup = function () {
-                onMouseUpAdd(circle);
-            };
     }
 
     function drawSpeedVector(mouseEvent) {
@@ -155,7 +122,37 @@ var Grav = (function ($, Canvas, CN, CF) {
         Canvas.getSvgCanvas().onmousemove = function (e) {
             // huh
         };
-        C.log('END');
+        console.log('END');
+    }
+
+    function onSvgMouseDown(mouseEvent) {
+        var x, y, circle, canvas;
+
+        mouseEvent.translate(Canvas.getTranslation());
+
+        x = mouseEvent.getX();
+        y = mouseEvent.getY();
+        circle = createCircle('circle_' + CF.nextId(), x, y, SVG_CIRCLE_WIDTH, selectedColor);
+
+
+        Canvas.getSvgCanvas().onmousemove = function (event) {
+            drawSpeedVector(new CN.MultiBrowserMouseEvent(event));
+        };
+
+        // creates a line
+        lastVectorLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        lastVectorLine.setAttribute('x1', mouseEvent.getX());
+        lastVectorLine.setAttribute('y1', mouseEvent.getY());
+        lastVectorLine.setAttribute('x2', mouseEvent.getX());
+        lastVectorLine.setAttribute('y2', mouseEvent.getY());
+        lastVectorLine.setAttribute('style', 'stroke:rgb(255,0,0);stroke-width:1');
+        Canvas.drawShape(lastVectorLine);
+        //
+        canvas = Canvas.getSvgCanvas();
+        canvas.onmouseleave = //
+            canvas.onmouseup = function () {
+                onMouseUpAdd(circle);
+            };
     }
 
     function setMoonMode() {
@@ -179,13 +176,20 @@ var Grav = (function ($, Canvas, CN, CF) {
 
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+    function SpaceBodyInfo(id, mass, vx, vy) {
+        this.id = id;
+        this.Mass.val = mass;
+        this.Mass.vx = vx;
+        this.Mass.vy = vy;
+    }
+
     function saveSpaceBodies() {
         var textState, script, spaceBodyInfos, bodyIndex;
 
         textState = Canvas.serializeState();
 
         script = document.createElement('script');
-        spaceBodyInfos = new Array();
+        spaceBodyInfos = [];
         bodyIndex = 0;
 
         $(shapes).select('[id*="circle"]').each(function () {
@@ -196,17 +200,6 @@ var Grav = (function ($, Canvas, CN, CF) {
         script.innerHTML = JSON.stringify(spaceBodyInfos);
         textState += script.outerHTML;
         self.SAVE_OUT_AREA.val(textState);
-    }
-
-    function SpaceBodyInfo(id, mass, vx, vy) {
-        this.id = id;
-        this.Mass.val = mass;
-        this.Mass.vx = vx;
-        this.Mass.vy = vy;
-    }
-
-    function restoreFromOutputArea() {
-        restoreState(self.SAVE_OUT_AREA.val());
     }
 
     function restoreState(serializedAppState) {
@@ -236,6 +229,10 @@ var Grav = (function ($, Canvas, CN, CF) {
         });
     }
 
+    function restoreFromOutputArea() {
+        restoreState(self.SAVE_OUT_AREA.val());
+    }
+
     self = {
         init: initSvg,
         setEarthMode: setEarthMode,
@@ -248,12 +245,14 @@ var Grav = (function ($, Canvas, CN, CF) {
         clearTraces: clearTraces,
         saveSpaceBodies: saveSpaceBodies,
         restoreFromOutputArea: restoreFromOutputArea,
-        onSvgMouseDown: onSvgMouseDown,
+        onSvgMouseDown: onSvgMouseDown
     };
 
-    return self.init();
+    console.log('grav inited', self);
+    self.init();
+    return self;
 
-}($, Canvas, CN, CF));
+});
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /*

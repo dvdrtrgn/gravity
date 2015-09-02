@@ -1,7 +1,10 @@
-/*global jQuery, CF */
+/*global define, console, CF */
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+define(['jquery'], function ($) {
+    'use strict';
 
-var Canvas = (function ($, svgSel) {
-    var _, self = {}, C = window.console;
+    var _, self = {};
+    var svgSel = CF.CANVAS_SEL;
     var xmlhead = 'http://www.w3.org/2000/svg';
     var canvasEle, transEle, transObj;
 
@@ -37,7 +40,7 @@ var Canvas = (function ($, svgSel) {
         return {
             x: transObj.x,
             y: transObj.y,
-            z: transObj.z,
+            z: transObj.z
         };
     };
 
@@ -63,7 +66,7 @@ var Canvas = (function ($, svgSel) {
             id: id,
             r: radius,
             cx: cx,
-            cy: cy,
+            cy: cy
         });
         this.drawShape(ele);
         return ele;
@@ -78,7 +81,7 @@ var Canvas = (function ($, svgSel) {
             id: id,
             x: x,
             y: y,
-            width: width,
+            width: width
         });
         this.drawShape(ele);
         return ele;
@@ -88,12 +91,12 @@ var Canvas = (function ($, svgSel) {
         _ = self._ = {
             canvasEle: canvasEle = $(svgSel)[0],
             transEle: transEle = document.createElementNS(xmlhead, 'g'),
-            transObj: self.resetTranslation(),
+            transObj: self.resetTranslation()
         };
         canvasEle.appendChild(transEle);
-        C.log('Canvas inited', self);
+        console.log('Canvas inited', self);
         return self;
-    };
+    }
     return init();
-}(jQuery, CF.CANVAS_SEL));
+});
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
