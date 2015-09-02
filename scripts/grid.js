@@ -2,57 +2,57 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 define([], function () {
 
-var GG = (function () {
+    var GG = (function () {
 
-    function Point() {
-        this.name = this.toString();
-    }
-    function Vector(nom) {
-        var v = [];
-        if (nom) {
-            v.name = nom;
+        function Point() {
+            this.name = this.toString();
         }
-        return v;
-    }
-    function Grid(x, y) {
-        this.cols = x || new Vector();
-        this.rows = y || new Vector();
-    }
-
-    Grid.prototype.checkXY = function (x, y) {
-        var pnt, col, row;
-
-        col = this.getCol(x);
-        pnt = col[y];
-
-        if (!pnt) {
-            row = this.getRow(y);
-            col[y] = row[x] = this.makePoint(x, y); // indexed by x AND y
-            return false;
+        function Vector(nom) {
+            var v = [];
+            if (nom) {
+                v.name = nom;
+            }
+            return v;
         }
-        return pnt;
-    };
-    Grid.prototype.getCol = function (n) {
-        return this.cols[n] || (this.cols[n] = new Vector('col' + n));
-    };
-    Grid.prototype.getRow = function (n) {
-        return this.rows[n] || (this.rows[n] = new Vector('row' + n));
-    };
-    Grid.prototype.makePoint = function (x, y) {
-        var val = [x, y];
+        function Grid(x, y) {
+            this.cols = x || new Vector();
+            this.rows = y || new Vector();
+        }
 
-        Point.prototype.valueOf = function () {
-            return val.concat(); // hidden
-        };
-        Point.prototype.toString = function () {
-            return this.valueOf().join(':');
-        };
-        return new Point();
-    };
-    return new Grid();
-}());
+        Grid.prototype.checkXY = function (x, y) {
+            var pnt, col, row;
 
-console.log('grid loaded');
+            col = this.getCol(x);
+            pnt = col[y];
+
+            if (!pnt) {
+                row = this.getRow(y);
+                col[y] = row[x] = this.makePoint(x, y); // indexed by x AND y
+                return false;
+            }
+            return pnt;
+        };
+        Grid.prototype.getCol = function (n) {
+            return this.cols[n] || (this.cols[n] = new Vector('col' + n));
+        };
+        Grid.prototype.getRow = function (n) {
+            return this.rows[n] || (this.rows[n] = new Vector('row' + n));
+        };
+        Grid.prototype.makePoint = function (x, y) {
+            var val = [x, y];
+
+            Point.prototype.valueOf = function () {
+                return val.concat(); // hidden
+            };
+            Point.prototype.toString = function () {
+                return this.valueOf().join(':');
+            };
+            return new Point();
+        };
+        return new Grid();
+    }());
+
+    console.log('grid loaded');
     return GG;
 });
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
